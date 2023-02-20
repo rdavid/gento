@@ -1,0 +1,435 @@
+#!/bin/sh
+# vi:et lbr noet sw=2 ts=2 tw=79 wrap
+# Copyright 2023 David Rabkin
+# Uses Unix shell framework shellbase:
+#  https://github.com/rdavid/shellbase/
+# shellcheck disable=SC3043 # Uses local variables.
+# shellcheck disable=SC1091,SC2034 # File not following, appears unused.
+readonly \
+	BASE_APP_USAGE=Usage:\ run\ cnf-name. \
+	BASE_APP_VERSION=0.9.20230214 \
+	BASE_MIN_VERSION=0.9.20230212
+. base.sh
+
+# Composes Ansible parameters for Helm Charts tests.
+helm_charts() {
+	local cfg
+	cfg="$(dirname "$(realpath "$0")")/helm-charts-$CNF.yml"
+
+	# The function returns string as output, the following two functions produce
+	# information strings, do not add those to the output.
+	file_exists "$cfg" >/dev/null || return 0
+	is_readable "$cfg" >/dev/null || die
+	printf -- " \
+--extra-vars \"kubeconfig_path\"=\"%s\" \
+--extra-vars \"do_chart_verifier\"=\"true\" \
+--extra-vars \"@%s\"\
+" \
+		"$KUBECONFIG" \
+		"$cfg"
+}
+
+# Adds environment variables for DCI if a resource file exists.
+resource() {
+	local rc
+	rc="$(dirname "$(realpath "$0")")"
+	inside "$CNF" test && rc="$rc"/dcirc-test.sh || rc="$rc"/dcirc.sh
+	file_exists "$rc" || return 0
+	is_readable "$rc" || die
+
+	# shellcheck disable=SC1090 # File not following.
+	. "$rc"
+	log Uses resource "$rc".
+}
+
+# Extracts image version number from the first parameter. Looks for four digits
+# first, them looks for SemVer, because it could extract 2.3.4 from 1.2.3.4.
+# Uses GNU grep with PCRE option.
+extract_image_version() {
+	local str="$1" ver
+	ver="$(
+		printf %s "$str" |
+			grep --only-matching --perl-regexp \
+			'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)'
+	)" || { logw No four digits in "$str".; semver "$str"; return 0;}
+	printf %s "$ver"
+}
+
+# Reads images from the namespace. Temporarily disables exit on error only for
+# the commands in the scope. The cycle 'while' with 'read' handles multiple
+# lines input.
+images_versions_ns() {
+	local \
+		err=nil:0.0.0+nil \
+		images \
+		ns="$1"
+	images="$(
+		set +o errexit
+		oc get pods \
+			--no-headers \
+			--namespace "$ns" \
+			--output=custom-columns='DATA:spec.containers[*].image'
+	)" || {
+		logw Unable to extract an image from namespace "$ns": "$images"
+			printf %s $err
+			return 0
+	}
+	[ -n "$images" ] || {
+		logw There is no image in namespace "$ns".
+		printf %s $err
+		return 0
+	}
+
+	# Multiple images in one pod are separated by comma.
+	images="$(printf %s "$images" | tr , \\n | sort --unique)" || die "$images"
+
+	# The new line is needed in order to read the last line.
+	printf %s\\n "$images" | {
+		local \
+			image \
+			name \
+			nametag \
+			once=true \
+			versions=none
+		while IFS= read -r image; do
+			nametag="$(printf %s "$image" | awk --field-separator / '{print $NF}')"
+			[ "$nametag" = "$image" ] && {
+				loge Unable to extract a name from image "$image".
+				if [ $once = true ]; then
+					versions=$err
+					once=false
+				else
+					versions="$versions $err"
+				fi
+				continue
+			}
+			name="$(printf %s "$nametag" | awk --field-separator : '{print $1}')"
+			[ "$name" = "$nametag" ] && {
+				logw Unable to extract a tag from image "$image".
+				if [ $once = true ]; then
+					versions="$name"
+					once=false
+				else
+					versions="$versions $name"
+				fi
+				continue
+			}
+			if [ $once = true ]; then
+				versions="$name:$(extract_image_version "$nametag")"
+				once=false
+			else
+				versions="$versions $name:$(extract_image_version "$nametag")"
+			fi
+		done
+		printf %s "$versions"
+	}
+}
+
+# Extracts image versions.
+images_versions() {
+	local once=true ns nss versions=none
+	nss="$(yq .tnf_config.[].namespace "$CFG" 2>&1)" ||
+		die Unable to read namespaces from "$CFG": "$nss".
+	nss="$(printf %s "$nss" | tr \\n \ )"
+
+	# Passes every word in the sentence, there is no need for quotes.
+	for ns in $nss; do
+		log Read images from namespace "$ns". >&2
+		if [ $once = true ]; then
+			versions="$(images_versions_ns "$ns")"
+			once=false
+		else
+			versions="$versions $(images_versions_ns "$ns")"
+		fi
+	done
+	printf %s "$versions" | xargs --max-args=1 | sort --unique | xargs
+}
+
+# Gets node hardware version by none name. xargs trims white spaces and
+# eliminates multiple white spaces.
+node_version() {
+	[ -z "${1-}" ] && die Usage: node_version node-name.
+	local err=none manufac node="$1" out product
+	out="$(
+		oc debug node/"$node" --quiet 2>&1 -- sh -c '\
+			dmidecode -s system-manufacturer 2>&1 &&
+			dmidecode -s system-product-name 2>&1'
+	)" || die Unable to run debug pod at node "$node": "$out"
+	manufac="$(printf %s "$out" | tail -2 | head -1 | xargs)"
+	manufac="${manufac:=$err}"
+	product="$(printf %s "$out" | tail -1 | xargs)"
+	product="${product:=$err}"
+	printf %s:%s "$manufac" "$product"
+}
+
+# Lists nodes manufactors and product names, e.g.:
+# Supermicro:SYS-1019P-XXXXX Dell:R740
+nodes_versions() {
+	local once=true node nodes versions=none
+	nodes="$(
+		oc get nodes \
+			--no-headers \
+			--output=custom-columns=NAME:metadata.name \
+			2>&1
+	)" || die Unable to get node names: "$nodes".
+	nodes="$(printf %s "$nodes" | tr \\n \ )"
+	for node in $nodes; do
+		log Read hardware of "$node". >&2
+		if [ $once = true ]; then
+			versions="$(node_version "$node")" || die
+			once=false
+		else
+			versions="$versions%$(node_version "$node")" || die
+		fi
+	done
+	printf %s "$versions" |
+		tr % \\0 |
+		xargs --max-args=1 --null |
+		sort --unique |
+		tr \  : |
+		xargs
+}
+
+# First extracts a version from a sidecar settings file, on failure extracts
+# a version from default file.
+cnfct_version() {
+	local \
+		def=/usr/share/dci-openshift-app-agent/roles/cnf-cert/defaults/main.yml \
+		ver
+	ver="$(yq .test_network_function_version "$CFG" 2>&1)" ||
+		die Unable to read test_network_function_version from "$CFG": "$ver".
+	[ "$ver" = null ] || { printf %s "$ver"; return 0;}
+	logw Unable to read CNFCT version from "$CFG"
+	is_readable $def >/dev/null || die $def is not readable.
+	ver="$(yq .test_network_function_version $def 2>&1)" ||
+		die Unable to read test_network_function_version from "$def": "$ver".
+	[ "$ver" = null ] || { printf %s "$ver"; return 0;}
+	die Unable to read CNFCT version from $def.
+}
+
+# Create a components from the parameters if there are not existed.
+create_component() {
+	[ -z "${1-}" ] || [ $# -eq 0 ] && die Usage: create_component com1 com2...
+	local arg lines team_id topic_id topic_name
+	topic_name="$(yq .dci_topic "$CFG" 2>&1)" ||
+		die Unable to read dci_topic from "$CFG": "$topic_name".
+	topic_id=$(
+		dcictl \
+			--format json \
+			topic-list \
+			--where name:"$topic_name" |
+		jq --raw-output '.topics[].id'
+	) || die Unable to read dci_topic_id for "$topic_name".
+	team_id=$(
+		dcictl \
+			--format json \
+			team-list |
+		jq \
+			--arg team_name "$DCI_TEAM_NAME" \
+			--raw-output '.teams[] | select(.name == $team_name) | .id'
+	) || die Unable to read dci_team_id for "$DCI_TEAM_NAME".
+	for arg do
+		lines="$(
+			dcictl \
+				component-list \
+				--topic-id "$topic_id" \
+				--where name:"$arg" |
+			wc -l
+		)"
+		[ "$lines" -le 4 ] || { log Exists "$arg".; continue;}
+		dcictl \
+			--format json \
+			component-create \
+			--topic-id "$topic_id" \
+			--team-id "$team_id" \
+			--name "$arg" \
+			--canonical_project_name "$arg" \
+			--type pkg >/dev/null ||
+			die "Failed to create $arg for topic_id=$topic_id and team_id=$team_id."
+		log Creates "$arg".
+	done
+}
+
+# Asks permission to continue if there is no a single running pod with a label
+# in a namespace.
+is_cnf_running() {
+	local i=0 lb lbs ns nss
+	nss="$(yq .tnf_config.[].namespace "$CFG" 2>&1)" ||
+		die Unable to read namespaces from "$CFG": "$nss".
+	nss="$(printf %s "$nss" | tr \\n \ )"
+
+	# Passes every word in the sentence, there is no need for quotes.
+	for ns in $nss; do
+		lbs="$(yq .tnf_config.[$i].targetpodlabels.[] "$CFG" 2>&1)" ||
+			die Unable to read labels of "$ns" from "$CFG": "$lbs".
+
+		# Passes every word in the sentence, there is no need for quotes. Lists all
+		# running pods with the label in the namespace. Grep fails if there is no a
+		# single one.
+		for lb in $lbs; do
+			log Looking for a running pod with "$lb" in "$ns".
+			oc get pods \
+				--field-selector=status.phase=Running \
+				--namespace "$ns" \
+				--no-headers \
+				--output custom-columns=:metadata.name \
+				--selector="$lb" | grep --quiet . ||
+				yes_to_continue \
+					There is no a running pod with "$lb" in "$ns", continue?
+		done
+		i=$((i+1))
+	done
+}
+
+# Checks different aspects of an environment.
+validate_env() {
+	be_user dci-openshift-app-agent
+	file_exists "$CFG" || die "$CFG: No such file. $BASE_APP_USAGE"
+	is_readable "$CFG" || die "$CFG" is not readable.
+	resource
+	validate_cmd \
+		dci-openshift-agent-ctl \
+		dci-openshift-app-agent-ctl \
+		dcictl \
+		jq \
+		oc \
+		sort \
+		wget \
+		yq
+	validate_var \
+		DCI_API_SECRET \
+		DCI_CLIENT_ID \
+		DCI_CS_URL \
+		DCI_TEAM_NAME \
+		KUBECONFIG \
+		XDG_RUNTIME_DIR
+	file_exists "$KUBECONFIG" || die "$KUBECONFIG": No such file.
+	is_writable "$KUBECONFIG" || die "$KUBECONFIG" is not writable.
+	[ -O "$KUBECONFIG" ] ||
+		die "$KUBECONFIG" should be owned by dci-openshift-app-agent.
+	file_exists "$XDG_RUNTIME_DIR" || die "$XDG_RUNTIME_DIR": No such file.
+	is_writable "$XDG_RUNTIME_DIR" || die "$XDG_RUNTIME_DIR" is not writable.
+
+	# Continues only with certain shellbase version.
+	ver_ge "$BASE_VERSION" $BASE_MIN_VERSION ||
+		die Shellbase is "$BASE_VERSION", needs $BASE_MIN_VERSION or above.
+
+	# Makes sure DCI server is available.
+	url_exists "$DCI_CS_URL" || {
+			validate_var \
+				http_proxy \
+				https_proxy \
+				no_proxy
+			die Check HTTP proxy configuration.
+		}
+
+	# Makes sure the cluster is available. Uses the output only in case of an
+	# error.
+	local out
+	out="$(oc get nodes 2>&1)" || die Unable to connect to cluster: "$out".
+	is_cnf_running
+}
+
+# Gets local system information.
+read_info() {
+	CNFA="CNF $CNF"
+	CNFCT="cnf-certification-test $(cnfct_version)" || die
+	RUN="run $BASE_APP_VERSION"
+	KUBE="Kubernetes $(oc version | grep Kubernetes | awk '{print $3}')"
+	OC_CLIENT="oc client $(oc version | grep "Client" | awk '{print $3}')"
+	RHCOS="RHCOS $(oc adm release info \
+		--output 'jsonpath={.displayVersions.machine-os.Version}' || :)"
+	SHELLBASE="shellbase $BASE_VERSION"
+	readonly \
+		CNFA \
+		CNFCT \
+		RUN \
+		KUBE \
+		OC_CLIENT \
+		RHCOS \
+		SHELLBASE
+}
+
+# The argument is a CNF name.
+main() {
+	[ "$#" -ne 1 ] && die "$BASE_APP_USAGE"
+	CNF="$1"
+
+	# DCI works with absolute paths, makes sure parent directories are readable.
+	# The configuration file is expected to be next to the script file.
+	realpath "$0" >/dev/null 2>&1 || die "$0": Unable to read absolute path.
+	CFG="$(dirname "$(realpath "$0")")/settings-$CNF.yml"
+	readonly CFG CNF
+	local charts com coms image images node nodes tags
+	validate_env
+	read_info
+	create_component \
+		"$CNFA" \
+		"$CNFCT" \
+		"$RUN" \
+		"$KUBE" \
+		"$OC_CLIENT" \
+		"$RHCOS" \
+		"$SHELLBASE"
+	coms="\
+\"name:$CNFA\",\
+\"name:$CNFCT\",\
+\"name:$RUN\",\
+\"name:$KUBE\",\
+\"name:$OC_CLIENT\",\
+\"name:$RHCOS\",\
+\"name:$SHELLBASE\""
+	tags="\
+\"$CNFA\",\
+\"$CNFCT\",\
+\"$RUN\",\
+\"$KUBE\",\
+\"$OC_CLIENT\",\
+\"$RHCOS\",\
+\"$SHELLBASE\""
+
+	# The function is ran in sub-process, additional die is needed.
+	charts="$(helm_charts)" || die
+
+	# Reads images from deployments and composes in format:
+	#  name-a:version-a name-b:version-b name-c:version-c
+	# Passes every word in the sentence, there is no need for quotes. Replaces
+	# colon with space for better readability.
+	images="$(images_versions)" || die
+	for image in $images; do
+		com="CNF img $(printf %s "$image" | tr : \ )"
+		create_component "$com"
+		coms="$coms,\"name:$com\""
+		tags="$tags,\"$com\""
+	done
+
+	# Reads nodes from cluster and composes in format:
+	#  vendor-a:product-a vendor-b:product-b vendor-c:product-c
+	nodes="$(nodes_versions)" || die
+	for node in $nodes; do
+		com="CNF node $(printf %s "$node" | tr : \ )"
+		create_component "$com"
+		coms="$coms,\"name:$com\""
+		tags="$tags,\"$com\""
+	done
+
+	# Ansible inside dci-openshift-app-agent-ctl uses it for colorful output.
+	export ANSIBLE_FORCE_COLOR=True
+
+	# shellcheck disable=SC2086 # Double quotes.
+	# dci-openshift-app-agent-ctl handles the parameters as array, everything is
+	# formated right. stdout goes to regular log, stderr goes to error log.
+	{
+		dci-openshift-app-agent-ctl \
+			--config "$CFG" \
+			--start \
+			-- \
+			--extra-vars \{\"dci_components_by_query\":["$coms"]\}$charts \
+			--extra-vars \{\"dci_tags\":["$tags"]\} \
+			2>&1 1>&3 3>&- | to_loge
+	} \
+		3>&1 1>&2 | to_log
+}
+
+# Starting point.
+main "$@"

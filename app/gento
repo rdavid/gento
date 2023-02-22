@@ -6,8 +6,8 @@
 # shellcheck disable=SC3043 # Uses local variables.
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
-	BASE_APP_USAGE=Usage:\ run\ cnf-name. \
-	BASE_APP_VERSION=0.9.20230214 \
+	BASE_APP_USAGE=Usage:\ gento\ cnf-name. \
+	BASE_APP_VERSION=0.9.20230223 \
 	BASE_MIN_VERSION=0.9.20230212
 . base.sh
 
@@ -334,7 +334,7 @@ validate_env() {
 read_info() {
 	CNFA="CNF $CNF"
 	CNFCT="cnf-certification-test $(cnfct_version)" || die
-	RUN="run $BASE_APP_VERSION"
+	GENTO="gento $BASE_APP_VERSION"
 	KUBE="Kubernetes $(oc version | grep Kubernetes | awk '{print $3}')"
 	OC_CLIENT="oc client $(oc version | grep "Client" | awk '{print $3}')"
 	RHCOS="RHCOS $(oc adm release info \
@@ -343,7 +343,7 @@ read_info() {
 	readonly \
 		CNFA \
 		CNFCT \
-		RUN \
+		GENTO \
 		KUBE \
 		OC_CLIENT \
 		RHCOS \
@@ -366,7 +366,7 @@ main() {
 	create_component \
 		"$CNFA" \
 		"$CNFCT" \
-		"$RUN" \
+		"$GENTO" \
 		"$KUBE" \
 		"$OC_CLIENT" \
 		"$RHCOS" \
@@ -374,7 +374,7 @@ main() {
 	coms="\
 \"name:$CNFA\",\
 \"name:$CNFCT\",\
-\"name:$RUN\",\
+\"name:$GENTO\",\
 \"name:$KUBE\",\
 \"name:$OC_CLIENT\",\
 \"name:$RHCOS\",\
@@ -382,7 +382,7 @@ main() {
 	tags="\
 \"$CNFA\",\
 \"$CNFCT\",\
-\"$RUN\",\
+\"$GENTO\",\
 \"$KUBE\",\
 \"$OC_CLIENT\",\
 \"$RHCOS\",\

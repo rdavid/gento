@@ -20,7 +20,7 @@ sudo ./app/install
 relative sidecar settings file should be presented:
 ```sh
 sudo su - dci-openshift-app-agent
-./app/run foobar
+./app/gento foobar
 ```
 
 ## License

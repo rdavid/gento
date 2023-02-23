@@ -6,7 +6,7 @@
 # shellcheck disable=SC3043 # Uses local variables.
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20230214 \
+	BASE_APP_VERSION=0.9.20230224 \
 	DST=/usr/local/bin \
 	PKG="\
 curl \
@@ -14,7 +14,8 @@ dci-ansible \
 dci-openshift-agent \
 dci-openshift-app-agent \
 jq \
-python3-dciclient" \
+python3-dciclient \
+tar" \
 	SHR=0.9.20230212 \
 	USR=dci-openshift-app-agent \
 	YQR=4.30.8
@@ -23,55 +24,20 @@ readonly \
 	SH=https://github.com/rdavid/shellbase/archive/refs/tags/v$SHR.tar.gz \
 	YQ=https://github.com/mikefarah/yq/releases/download/v$YQR/yq_linux_amd64
 
-validate() {
-	command -v curl >/dev/null 2>&1 || { printf >&2 Install\ curl.\\n; exit 12;}
-	command -v tar >/dev/null 2>&1 || { printf >&2 Install\ tar.\\n; exit 13;}
-	curl --fail --head --output /dev/null --silent $SH ||
-		{ printf >&2 '%s is unavailable.\n' $SH; exit 14;}
-	eval "$(
-		curl --location --silent $SH |
-			tar \
-				--extract \
-				--gzip \
-				--to-stdout \
-				shellbase-$SHR/lib/base.sh
-	)"
-	be_root
-	is_writable $DST || die $DST is not writable.
-	url_exists $OC $SH $YQ || die
-	user_exists $USR || die $USR: Not such user.
-
-	# Verifies that XDG_RUNTIME_DIR exists and accessible by
-	# dci-openshift-app-agent.
-	local dir
-	dir=/run/user/"$(id -u $USR)"
-	install --directory --group $USR --mode 0700 --owner $USR "$dir" ||
-		die Unable to create "$dir".
-}
-
-# dnf upgrade does not fail if multiple packages are listed, and a single
-# package succeeds, hence upgrade packages one by one.
-main() {
-	validate
+# Installs or updates needful RHEL packages. dnf upgrade does not fail if
+# multiple packages are listed, and a single package succeeds, hence upgrade
+# packages one by one.
+install_dnf() {
 	local out pkg
 	for pkg in $PKG; do
 		out="$(dnf install --assumeyes --best --quiet "$pkg" 2>&1)" ||
 			die "Failed to install or upgrade $pkg. $out"
 		log "$pkg" is installed or upgraded.
 	done
-	curl --location --silent $SH |
-		tar \
-			--directory $DST \
-			--extract \
-			--gzip \
-			--strip-components=2 \
-			shellbase-$SHR/lib/base.sh ||
-		die Unable to install shellbase.
-	log shellbase is installed or upgraded.
-	curl --location --output $DST/yq --silent $YQ ||
-		die Unable to install $YQ.
-	chmod +x $DST/yq || die Unable to add execute permission to $DST/yq.
-	log yq is installed or upgraded.
+}
+
+# Downloads archive, extracts, and puts the single file to the destination.
+install_oc() {
 	curl --location --silent $OC |
 		tar \
 			--directory $DST \
@@ -82,5 +48,71 @@ main() {
 	log oc is installed or upgraded.
 }
 
+# Downloads archive, extracts, and puts the single file to the destination.
+install_shellbase() {
+	curl --location --silent $SH |
+		tar \
+			--directory $DST \
+			--extract \
+			--gzip \
+			--strip-components=2 \
+			shellbase-$SHR/lib/base.sh ||
+		die Unable to install shellbase.
+	log shellbase is installed or upgraded.
+}
+
+# Downloads the executable to the destination.
+install_yq() {
+	curl --location --output $DST/yq --silent $YQ ||
+		die Unable to install $YQ.
+	chmod +x $DST/yq || die Unable to add execute permission to $DST/yq.
+	log yq is installed or upgraded.
+}
+
+# Validates the environment and installs the software.
+main() {
+	validate
+	install_dnf
+	install_oc
+	install_shellbase
+	install_yq
+}
+
+# Uses Unix shell framework shellbase:
+#  https://github.com/rdavid/shellbase/
+shellbase() {
+	eval "$(
+		curl --location --silent $SH |
+			tar \
+				--extract \
+				--gzip \
+				--to-stdout \
+				shellbase-$SHR/lib/base.sh
+	)"
+	[ -n "${BASE_VERSION+x}" ] || { printf >&2 No\ shellbase.\\n; exit 14;}
+}
+
+# Certain packages should be installed.
+validate() {
+	local dir pkg
+	for pkg in curl tar; do
+		command -v $pkg >/dev/null 2>&1 ||
+			{ printf >&2 Install\ %s.\\n $pkg; exit 12;}
+	done
+	curl --fail --head --output /dev/null --silent $SH ||
+		{ printf >&2 '%s is unavailable.\n' $SH; exit 13;}
+	shellbase
+	be_root
+	is_writable $DST || die $DST is not writable.
+	url_exists $OC $SH $YQ || die
+	user_exists $USR || die $USR: Not such user.
+
+	# Verifies that XDG_RUNTIME_DIR exists and accessible by
+	# dci-openshift-app-agent.
+	dir=/run/user/"$(id -u $USR)"
+	install --directory --group $USR --mode 0700 --owner $USR "$dir" ||
+		die Unable to create "$dir".
+}
+
 # Starting point.
-main
+main "$@"

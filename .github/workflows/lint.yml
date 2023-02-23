@@ -11,4 +11,4 @@ jobs:
           scandir: app
       - uses: ibiqlik/action-yamllint@v3
         with:
-          file_or_dir: .github/workflows/*.yml
+          file_or_dir: .github/workflows/*.yml cfg

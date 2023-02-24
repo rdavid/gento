@@ -9,7 +9,7 @@
 Hello, I'm [David Rabkin](http://cv.rabkin.co.il). `gento` stands for an aGent OpenShift.
 
 ## Install
-The artifact is a single non-executable [text
+The artifact is a single executable POSIX shell [script
 file](https://github.com/rdavid/gento/blob/master/app/gento). Install the file
 from released version. Some OS demands administrative rights to
 install to `/usr/local/bin`, use `sudo` or `doas` before `tar`:
@@ -43,7 +43,7 @@ relative sidecar settings file should be presented. Make sure `/usr/local/bin`
 is in `dci-openshift-app-agent` user's `PATH`.
 ```sh
 sudo su - dci-openshift-app-agent
-gento cnf-name
+gento settings-cnf-name.yml
 ```
 
 ## License

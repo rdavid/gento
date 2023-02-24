@@ -6,7 +6,7 @@
 # shellcheck disable=SC3043 # Uses local variables.
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
-	BASE_APP_USAGE=Usage:\ gento\ cnf-name. \
+	BASE_APP_USAGE=Usage:\ gento\ settings-cnf-name.yml. \
 	BASE_APP_VERSION=0.9.20230224 \
 	BASE_MIN_VERSION=0.9.20230212
 . base.sh
@@ -223,17 +223,11 @@ images_versions_ns() {
 	}
 }
 
-# The argument is a CNF name.
+# The argument is a settings file, settings-cnf-name.yml is expected.
 main() {
-	[ "$#" -ne 1 ] && die "$BASE_APP_USAGE"
-	CNF="$1"
-
-	# DCI works with absolute paths, makes sure parent directories are readable.
-	# The configuration file is expected to be next to the script file.
-	realpath "$0" >/dev/null 2>&1 || die "$0": Unable to read absolute path.
-	CFG="$(dirname "$(realpath "$0")")/settings-$CNF.yml"
-	readonly CFG CNF
 	local charts com coms image images node nodes tags
+	[ "$#" -ne 1 ] && die "$BASE_APP_USAGE"
+	readonly CFG="$1"
 	validate_env
 	read_info
 	create_component \
@@ -369,10 +363,11 @@ read_info() {
 		SHELLBASE
 }
 
-# Adds environment variables for DCI if a resource file exists.
+# Adds environment variables for DCI if a resource file exists next to the
+# settings file. Otherwise DCI Agent will use default resource file.
 resource() {
 	local rc
-	rc="$(dirname "$(realpath "$0")")"
+	rc="$(dirname "$(realpath "$CFG")")"
 	inside "$CNF" test && rc="$rc"/dcirc-test.sh || rc="$rc"/dcirc.sh
 	file_exists "$rc" || return 0
 	is_readable "$rc" || die
@@ -382,11 +377,27 @@ resource() {
 	log Uses resource "$rc".
 }
 
-# Checks different aspects of an environment.
+# Checks various aspects of an environment.
 validate_env() {
 	be_user dci-openshift-app-agent
 	file_exists "$CFG" || die "$CFG: No such file. $BASE_APP_USAGE"
 	is_readable "$CFG" || die "$CFG" is not readable.
+
+	# DCI works with absolute paths, makes sure parent directories are readable.
+	realpath "$CFG" >/dev/null 2>&1 || die "$CFG": Unable to read absolute path.
+
+	# Gets the basename without external command by stripping out longest leading
+	# match of anything followed by slash.
+	CNF="$CFG##*/}"
+
+	# Strips all extensions by stripping out longest trailing match of dot
+	# followed by anything.
+	CNF="${CNF%%.*}"
+
+	# Removes the prefix, if exists.
+	CNF="${CNF#*settings-}"
+	readonly CNF
+	var_exists CNF || die Unable to continue with "$CFG": No CNF name.
 	resource
 	validate_cmd \
 		dci-openshift-agent-ctl \

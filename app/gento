@@ -7,7 +7,7 @@
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
 	BASE_APP_USAGE=Usage:\ gento\ settings-cnf-name.yml. \
-	BASE_APP_VERSION=0.9.20230224 \
+	BASE_APP_VERSION=0.9.20230225 \
 	BASE_MIN_VERSION=0.9.20230212
 . base.sh
 
@@ -227,8 +227,7 @@ images_versions_ns() {
 main() {
 	local charts com coms image images node nodes tags
 	[ "$#" -ne 1 ] && die "$BASE_APP_USAGE"
-	readonly CFG="$1"
-	validate_env
+	validate_env "$@"
 	read_info
 	create_component \
 		"$CNFA" \
@@ -343,6 +342,31 @@ nodes_versions() {
 		xargs
 }
 
+# Parse input parameters. The first parameter could be a path to settings file
+# or CNF name, which is a legacy mode. CFG and CNF are based on the parameter.
+parse_input() {
+	local str="$1"
+	if file_exists "$str"; then
+		CFG="$str"
+
+		# Extracts CNF name from settings file name.
+		# 1. Gets the basename without external command by stripping out longest
+		# leading match of anything followed by slash.
+		# 2. Strips all extensions by stripping out longest trailing match of dot
+		# followed by anything.
+		# 3. Removes the prefix, if exists.
+		CNF="$CFG##*/}"
+		CNF="${CNF%%.*}"
+		CNF="${CNF#*settings-}"
+	else
+		CFG="$(dirname "$(realpath "$0")")/settings-$str.yml"
+		file_exists "$CFG" || die "$str: No such file. $BASE_APP_USAGE"
+		log Legacy mode.
+		CNF="$str"
+	fi
+	readonly CFG CNF
+}
+
 # Gets local system information.
 read_info() {
 	CNFA="CNF $CNF"
@@ -380,23 +404,11 @@ resource() {
 # Checks various aspects of an environment.
 validate_env() {
 	be_user dci-openshift-app-agent
-	file_exists "$CFG" || die "$CFG: No such file. $BASE_APP_USAGE"
+	parse_input "$@"
 	is_readable "$CFG" || die "$CFG" is not readable.
 
 	# DCI works with absolute paths, makes sure parent directories are readable.
 	realpath "$CFG" >/dev/null 2>&1 || die "$CFG": Unable to read absolute path.
-
-	# Gets the basename without external command by stripping out longest leading
-	# match of anything followed by slash.
-	CNF="$CFG##*/}"
-
-	# Strips all extensions by stripping out longest trailing match of dot
-	# followed by anything.
-	CNF="${CNF%%.*}"
-
-	# Removes the prefix, if exists.
-	CNF="${CNF#*settings-}"
-	readonly CNF
 	var_exists CNF || die Unable to continue with "$CFG": No CNF name.
 	resource
 	validate_cmd \

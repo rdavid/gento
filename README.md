@@ -15,7 +15,7 @@ The artifact is a single executable POSIX-compliant shell script file
 file from the released version. RHEL demands administrative rights to write to
 `/usr/local/bin`, `sudo` before `tar` is used:
 ```sh
-REL=0.9.20230224
+REL=0.9.20230225
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
 curl --location --silent $SRC |
 	sudo tar \
@@ -29,7 +29,7 @@ To install `gento` with all dependencies run POSIX-compliant shell script file
 [`install`](https://github.com/rdavid/gento/blob/master/app/install) as a
 process owned by the superuser:
 ```sh
-REL=0.9.20230224
+REL=0.9.20230225
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
 sudo su -c eval -c "$(
 	curl --location --silent $SRC |

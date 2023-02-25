@@ -6,9 +6,9 @@
 # shellcheck disable=SC3043 # Uses local variables.
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20230224 \
+	BASE_APP_VERSION=0.9.20230225 \
 	DST=/usr/local/bin \
-	GOR=0.9.20230224 \
+	GOR=0.9.20230225 \
 	PKG="\
 curl \
 dci-ansible \

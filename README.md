@@ -6,30 +6,32 @@
 * [License](#license)
 
 ## About
-Hello, I'm [David Rabkin](http://cv.rabkin.co.il). `gento` stands for an aGent OpenShift.
+Hello, I'm [David Rabkin](http://cv.rabkin.co.il). `gento` stands for an aGent
+OpenShift. Currently DCI is supported only in RHEL8.
 
 ## Install
-The artifact is a single executable POSIX shell [script
-file](https://github.com/rdavid/gento/blob/master/app/gento). Install the file
-from released version. Some OS demands administrative rights to
-install to `/usr/local/bin`, use `sudo` or `doas` before `tar`:
+The artifact is a single executable POSIX-compliant shell script file
+[`gento`](https://github.com/rdavid/gento/blob/master/app/gento). Install the
+file from the released version. RHEL demands administrative rights to write to
+`/usr/local/bin`, `sudo` before `tar` is used:
 ```sh
 REL=0.9.20230224
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
 curl --location --silent $SRC |
-	tar \
+	sudo tar \
 		--directory /usr/local/bin \
 		--extract \
 		--gzip \
 		--strip-components=2 \
 		gento-$REL/app/gento
 ```
-To install `gento` with all dependencies run `install` as `root` user, only
-RHEL8 is supported:
+To install `gento` with all dependencies run POSIX-compliant shell script file
+[`install`](https://github.com/rdavid/gento/blob/master/app/install) as a
+process owned by the superuser:
 ```sh
 REL=0.9.20230224
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
-sudo eval "$(
+sudo su -c eval -c "$(
 	curl --location --silent $SRC |
 		tar \
 			--extract \
@@ -38,9 +40,9 @@ sudo eval "$(
 			gento-$REL/app/install
 )"
 ```
-Run `gento` as `dci-openshift-app-agent` user, the parameter is a CNF name, a
-relative sidecar settings file should be presented. Make sure `/usr/local/bin`
-is in `dci-openshift-app-agent` user's `PATH`.
+Run `gento` as `dci-openshift-app-agent` user, the parameter is a DCI settings
+file, expected name pattern is `settings-cnf-name.yml` for better reporting.
+Make sure `/usr/local/bin` is in `dci-openshift-app-agent` user's `PATH`.
 ```sh
 sudo su - dci-openshift-app-agent
 gento settings-cnf-name.yml

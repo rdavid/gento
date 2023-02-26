@@ -1,13 +1,14 @@
 # Gento [![linters](https://github.com/rdavid/gento/actions/workflows/lint.yml/badge.svg)](https://github.com/rdavid/gento/actions/workflows/lint.yml) [![hits of code](https://hitsofcode.com/github/rdavid/gento?branch=master&label=hits%20of%20code)](https://hitsofcode.com/view/github/rdavid/gento?branch=master) [![release)](https://img.shields.io/github/v/release/rdavid/gento?color=blue&label=%20&logo=semver&logoColor=white&style=flat)](https://github.com/rdavid/gento/releases) [![red hat](https://img.shields.io/badge/red%20hat---?color=gray&logo=redhat&logoColor=red&style=flat)](https://www.redhat.com) [![openshift](https://img.shields.io/badge/openshift---?color=gray&logo=redhatopenshift&logoColor=red&style=flat)](https://www.redhat.com/en/technologies/cloud-computing/openshift) [![license](https://img.shields.io/github/license/rdavid/gento?color=blue&labelColor=gray&logo=freebsd&logoColor=lightgray&style=flat)](https://github.com/rdavid/gento/blob/master/LICENSE)
-`gento` enables Cloud-Native Applications and Operators in OpenShift using Red Hat Distributed CI service.
+`gento` stands for aGent of OpenShift.
 
 * [About](#about)
 * [Install](#install)
 * [License](#license)
 
 ## About
-Hello, I'm [David Rabkin](http://cv.rabkin.co.il). `gento` stands for an aGent
-OpenShift. Currently DCI is supported only in RHEL8.
+Hello, I'm [David Rabkin](http://cv.rabkin.co.il). Gento enables Cloud-Native
+Applications and Operators in OpenShift using Red Hat Distributed CI service.
+Currently it is supported only in RHEL8.
 
 ## Install
 The artifact is a single executable POSIX-compliant shell script file
@@ -25,7 +26,8 @@ curl --location --silent $SRC |
 		--strip-components=2 \
 		gento-$REL/app/gento
 ```
-To install `gento` with all dependencies run POSIX-compliant shell script file
+To install [`gento`](https://github.com/rdavid/gento/blob/master/app/gento)
+with all dependencies run POSIX-compliant shell script file
 [`install`](https://github.com/rdavid/gento/blob/master/app/install) as a
 process owned by the superuser:
 ```sh
@@ -40,15 +42,16 @@ sudo su -c eval -c "$(
 			gento-$REL/app/install
 )"
 ```
-Run `gento` as `dci-openshift-app-agent` user, the parameter is a DCI settings
-file, expected name pattern is `settings-cnf-name.yml` for better reporting.
-Make sure `/usr/local/bin` is in `dci-openshift-app-agent` user's `PATH`.
+Run [`gento`](https://github.com/rdavid/gento/blob/master/app/gento) as
+`dci-openshift-app-agent` user, the parameter is a DCI settings file, expected
+name pattern is `settings-cnf-name.yml` for better reporting. Make sure
+`/usr/local/bin` is in `dci-openshift-app-agent` user's `PATH`.
 ```sh
 sudo su - dci-openshift-app-agent
 gento settings-cnf-name.yml
 ```
 
 ## License
-`gento` is copyright [David Rabkin](http://cv.rabkin.co.il) and available
+Gento is copyright [David Rabkin](http://cv.rabkin.co.il) and available
 under a
 [Zero-Clause BSD license](https://github.com/rdavid/gento/blob/master/LICENSE).

@@ -7,7 +7,7 @@
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
 	BASE_APP_USAGE=Usage:\ gento\ settings-cnf-name.yml. \
-	BASE_APP_VERSION=0.9.20230225 \
+	BASE_APP_VERSION=0.9.20230227 \
 	BASE_MIN_VERSION=0.9.20230212
 . base.sh
 
@@ -355,13 +355,13 @@ parse_input() {
 		# 2. Strips all extensions by stripping out longest trailing match of dot
 		# followed by anything.
 		# 3. Removes the prefix, if exists.
-		CNF="$CFG##*/}"
+		CNF="${CFG##*/}"
 		CNF="${CNF%%.*}"
 		CNF="${CNF#*settings-}"
 	else
 		CFG="$(dirname "$(realpath "$0")")/settings-$str.yml"
 		file_exists "$CFG" || die "$str: No such file. $BASE_APP_USAGE"
-		log Legacy mode.
+		log Gento is ran in legacy mode.
 		CNF="$str"
 	fi
 	readonly CFG CNF

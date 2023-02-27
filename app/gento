@@ -87,7 +87,7 @@ extract_image_version() {
 # Composes Ansible parameters for Helm Charts tests.
 helm_charts() {
 	local cfg
-	cfg="$(dirname "$(realpath "$0")")/helm-charts-$CNF.yml"
+	cfg="$(dirname "$(realpath "$0")")/helm-charts-$CNF.yml" || die
 
 	# The function returns string as output, the following two functions produce
 	# information strings, do not add those to the output.
@@ -347,7 +347,7 @@ nodes_versions() {
 parse_input() {
 	local str="$1"
 	if file_exists "$str"; then
-		CFG="$str"
+		CFG="$(realpath "$str")" || die
 
 		# Extracts CNF name from settings file name.
 		# 1. Gets the basename without external command by stripping out longest
@@ -359,7 +359,7 @@ parse_input() {
 		CNF="${CNF%%.*}"
 		CNF="${CNF#*settings-}"
 	else
-		CFG="$(dirname "$(realpath "$0")")/settings-$str.yml"
+		CFG="$(dirname "$(realpath "$0")")/settings-$str.yml" || die
 		file_exists "$CFG" || die "$str: No such file. $BASE_APP_USAGE"
 		log Gento is ran in legacy mode.
 		CNF="$str"
@@ -387,11 +387,24 @@ read_info() {
 		SHELLBASE
 }
 
+# Returns absolute path to a file, see:
+#  https://stackoverflow.com/questions/3915040/how-to-obtain-the-absolute-path-of-a-file-via-shell-bash-zsh-sh
+realpath() {
+	local base dir1 dir2 file="$1"
+	dir1="$(dirname -- "$file")" ||
+		die "$file": Unable to read a directory.
+	dir2="$(cd "$dir1" >/dev/null && pwd -P)" ||
+		die "$dir1": Unable to change a directory.
+	base="$(basename -- "$file")" ||
+		die "$file": Unable to read a basename.
+	printf %s/%s "$dir2" "$base"
+}
+
 # Adds environment variables for DCI if a resource file exists next to the
 # settings file. Otherwise DCI Agent will use default resource file.
 resource() {
 	local rc
-	rc="$(dirname "$(realpath "$CFG")")"
+	rc="$(dirname "$(realpath "$CFG")")" || die
 	inside "$CNF" test && rc="$rc"/dcirc-test.sh || rc="$rc"/dcirc.sh
 	file_exists "$rc" || return 0
 	is_readable "$rc" || die
@@ -408,7 +421,7 @@ validate_env() {
 	is_readable "$CFG" || die "$CFG" is not readable.
 
 	# DCI works with absolute paths, makes sure parent directories are readable.
-	realpath "$CFG" >/dev/null 2>&1 || die "$CFG": Unable to read absolute path.
+	realpath "$CFG" >/dev/null 2>&1 || die
 	var_exists CNF || die Unable to continue with "$CFG": No CNF name.
 	resource
 	validate_cmd \

@@ -52,6 +52,6 @@ gento settings-cnf-name.yml
 ```
 
 ## License
-Gento is copyright [David Rabkin](http://cv.rabkin.co.il) and available
+`gento` is copyright [David Rabkin](http://cv.rabkin.co.il) and available
 under a
 [Zero-Clause BSD license](https://github.com/rdavid/gento/blob/master/LICENSE).

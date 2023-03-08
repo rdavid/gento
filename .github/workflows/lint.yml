@@ -8,10 +8,10 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ibiqlik/action-yamllint@v3
         with:
-          file_or_dir: .github/workflows/*.yml cfg
+          file_or_dir: .github/workflows/*.yml cfg/*.yml
           strict: true
       - uses: ludeeus/action-shellcheck@master
         with:
-          additional_files: app/*
+          additional_files: app/* cfg/*.sh
       - uses: mfinelli/setup-shfmt@v2
       - run: shfmt -d app/* cfg/*.sh

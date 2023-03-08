@@ -7,11 +7,10 @@
 #  export \
 #  	DCI_API_SECRET='' \
 #  	DCI_CLIENT_ID='' \
+#  	DCI_TEAM_NAME='' \
 #  	KUBECONFIG=''
-# Probably, DCI_TEAM_NAME should be redefined.
 XDG_RUNTIME_DIR=/run/user/"$(id -u)"
 export \
 	DCI_CS_URL=https://api.distributed-ci.io \
-	DCI_TEAM_NAME=Foo\ Bar \
 	PATH=/usr/local/bin:"$PATH" \
 	XDG_RUNTIME_DIR

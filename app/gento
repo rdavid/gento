@@ -278,7 +278,7 @@ main() {
 	# colon with space for better readability.
 	images="$(images_versions)" || die
 	for image in $images; do
-		com="CNF img $(printf %s "$image" | tr : \ )"
+		com="pod $(printf %s "$image" | tr : \ )"
 		create_component "$com"
 		coms="$coms,\"name:$com\""
 		tags="$tags,\"$com\""
@@ -288,7 +288,7 @@ main() {
 	#  vendor-a:product-a vendor-b:product-b vendor-c:product-c
 	nodes="$(nodes_versions)" || die
 	for node in $nodes; do
-		com="CNF node $(printf %s "$node" | tr : \ )"
+		com="node $(printf %s "$node" | tr : \ )"
 		create_component "$com"
 		coms="$coms,\"name:$com\""
 		tags="$tags,\"$com\""
@@ -410,7 +410,7 @@ prettyuptime() {
 
 # Gets local system information.
 read_info() {
-	CNFA="CNF $CNF"
+	CNFA="$CNF"
 	CNFCT="cnf-certification-test $(cnfct_version)" || die
 	GENTO="gento $BASE_APP_VERSION"
 	KUBE="Kubernetes $(oc version | grep Kubernetes | awk '{print $3}')"

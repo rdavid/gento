@@ -8,7 +8,7 @@
 readonly \
 	BASE_APP_USAGE=Usage:\ gento\ settings-cnf-name.yml. \
 	BASE_APP_VERSION=0.9.20230308 \
-	BASE_MIN_VERSION=0.9.20230212
+	BASE_MIN_VERSION=0.9.20230308
 . base.sh
 
 # First extracts a version from a sidecar settings file, on failure extracts
@@ -389,25 +389,6 @@ parse_input() {
 	readonly CFG CNF
 }
 
-# Prints human readable uptime time, see:
-#  https://stackoverflow.com/questions/28353409/bash-format-uptime-to-show-days-hours-minutes
-prettyuptime() {
-	uptime | sed -E '
-		s/^[^,]*up *//
-		s/mins/minutes/
-		s/hrs?/hours/
-		s/([[:digit:]]+):0?([[:digit:]]+)/\1 hours, \2 minutes/
-		s/^1 hours/1 hour/
-		s/ 1 hours/ 1 hour/
-		s/min,/minutes,/
-		s/ 0 minutes,/ less than a minute,/
-		s/ 1 minutes/ 1 minute/
-		s/  / /
-		s/, *[[:digit:]]* users?.*//
-		s/^/↑ /
-	' | tr -d \\n
-}
-
 # Gets local system information.
 read_info() {
 	CNFA="$CNF"
@@ -426,19 +407,6 @@ read_info() {
 		OC_CLIENT \
 		RHCOS \
 		SHELLBASE
-}
-
-# Returns absolute path to a file, see:
-#  https://stackoverflow.com/questions/3915040/how-to-obtain-the-absolute-path-of-a-file-via-shell-bash-zsh-sh
-realpath() {
-	local base dir1 dir2 file="$1"
-	dir1="$(dirname -- "$file")" ||
-		die "$file": Unable to read a directory.
-	dir2="$(cd "$dir1" >/dev/null && pwd -P)" ||
-		die "$dir1": Unable to change a directory.
-	base="$(basename -- "$file")" ||
-		die "$file": Unable to read a basename.
-	printf %s/%s "$dir2" "$base"
 }
 
 # Adds environment variables for DCI if a resource file exists next to the

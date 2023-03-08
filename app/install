@@ -8,7 +8,7 @@
 readonly \
 	BASE_APP_VERSION=0.9.20230308 \
 	DST=/usr/local/bin \
-	GOR=0.9.20230227 \
+	GOR=0.9.20230308 \
 	PKG="\
 curl \
 dci-ansible \
@@ -17,7 +17,7 @@ dci-openshift-app-agent \
 jq \
 python3-dciclient \
 tar" \
-	SHR=0.9.20230212 \
+	SHR=0.9.20230308 \
 	USR=dci-openshift-app-agent \
 	YQR=4.31.2
 readonly \

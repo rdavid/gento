@@ -333,7 +333,7 @@ node_version() {
 }
 
 # Lists nodes manufactors and product names, e.g.:
-# Supermicro:SYS-1019P-XXXXX Dell:R740
+# Supermicro:SYS-1019P-XXXXX:1:day:1:hour\0Dell:R740:2:days:2:hours
 nodes_versions() {
 	local once=true node nodes versions=none
 	nodes="$(
@@ -352,8 +352,12 @@ nodes_versions() {
 			versions="$versions%$(node_version "$node")" || die
 		fi
 	done
+
+	# Replaces the separator between nodes. Removes commas from the string, it
+	# breaks parameters.
 	printf %s "$versions" |
 		tr % \\0 |
+		sed s/,//g |
 		xargs --max-args=1 --null |
 		sort --unique |
 		tr \  : |

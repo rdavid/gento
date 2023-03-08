@@ -1,5 +1,6 @@
 # Test dci-openshift-app-agent settings.
 ---
+dci_topic: OCP-4.10
 dci_name: Test
 dci_configuration: Supermicro, SNO, RH Lab
 dci_tags: [test]

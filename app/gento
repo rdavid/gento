@@ -315,17 +315,20 @@ main() {
 # eliminates multiple white spaces.
 node_version() {
 	[ -z "${1-}" ] && die Usage: node_version node-name.
-	local err=none manufac node="$1" out product
+	local err=none manufac node="$1" out product puptime
 	out="$(
-		oc debug node/"$node" --quiet -- sh -c '\
+		oc debug node/"$node" --quiet -- sh -c "\
 			dmidecode -s system-manufacturer 2>&1 &&
-			dmidecode -s system-product-name 2>&1' 2>&1
+			dmidecode -s system-product-name 2>&1 &&
+			$(which prettyuptime); prettyuptime" 2>&1
 	)" || die Unable to run debug pod at node "$node": "$out"
-	manufac="$(printf %s "$out" | tail -2 | head -1 | xargs)"
+	manufac="$(printf %s "$out" | tail -3 | head -1 | xargs)"
 	manufac="${manufac:=$err}"
-	product="$(printf %s "$out" | tail -1 | xargs)"
+	product="$(printf %s "$out" | tail -2 | head -1 | xargs)"
 	product="${product:=$err}"
-	printf %s:%s "$manufac" "$product"
+	puptime="$(printf %s "$out" | tail -1 | xargs)"
+	puptime="${puptime:=$err}"
+	printf %s:%s:%s "$manufac" "$product" "$puptime"
 }
 
 # Lists nodes manufactors and product names, e.g.:
@@ -379,6 +382,25 @@ parse_input() {
 		CNF="$str"
 	fi
 	readonly CFG CNF
+}
+
+# Prints human readable uptime time, see:
+#  https://stackoverflow.com/questions/28353409/bash-format-uptime-to-show-days-hours-minutes
+prettyuptime() {
+	uptime | sed -E '
+		s/^[^,]*up *//
+		s/mins/minutes/
+		s/hrs?/hours/
+		s/([[:digit:]]+):0?([[:digit:]]+)/\1 hours, \2 minutes/
+		s/^1 hours/1 hour/
+		s/ 1 hours/ 1 hour/
+		s/min,/minutes,/
+		s/ 0 minutes,/ less than a minute,/
+		s/ 1 minutes/ 1 minute/
+		s/  / /
+		s/, *[[:digit:]]* users?.*//
+		s/^/↑ /
+	' | tr -d \\n
 }
 
 # Gets local system information.

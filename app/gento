@@ -39,7 +39,7 @@ create_component() {
 	[ -z "${1-}" ] || [ $# -eq 0 ] && die Usage: create_component com1 com2...
 	local arg lines team_id topic_id topic_name
 	topic_name="$(yq .dci_topic "$CFG" 2>&1)" || die "$CFG": "$topic_name".
-	[ "$topic_name" = null ] || die "$CFG": No dci_topic.
+	[ "$topic_name" != null ] || die "$CFG": No dci_topic.
 	topic_id="$(
 		dcictl \
 			--format json \
@@ -47,6 +47,7 @@ create_component() {
 			--where name:"$topic_name" |
 			jq --raw-output '.topics[].id'
 	)" || die Unable to read dci_topic_id for "$topic_name".
+	[ "$topic_id" != null ] || die "$topic_name": No dci_topic_id.
 	team_id="$(
 		dcictl \
 			--format json \
@@ -55,7 +56,7 @@ create_component() {
 				--arg team_name "$DCI_TEAM_NAME" \
 				--raw-output '.teams[] | select(.name == $team_name) | .id'
 	)" || die Unable to read dci_team_id for "$DCI_TEAM_NAME".
-	log "The components have topic_id=$topic_id and team_id=$team_id."
+	[ "$team_id" != null ] || die "$DCI_TEAM_NAME": No dci_team_id.
 	for arg; do
 		lines="$(
 			dcictl \
@@ -77,7 +78,7 @@ create_component() {
 			--canonical_project_name "$arg" \
 			--type pkg >/dev/null ||
 			die "Failed to create $arg for topic_id=$topic_id and team_id=$team_id."
-		log Creates "$arg".
+		log "Creates $arg for topic_id=$topic_id and team_id=$team_id."
 	done
 }
 
@@ -311,7 +312,7 @@ main() {
 		3>&1 1>&2 | to_log
 }
 
-# Gets node hardware version by none name. xargs trims white spaces and
+# Gets node hardware version by node name. xargs trims white spaces and
 # eliminates multiple white spaces.
 node_version() {
 	[ -z "${1-}" ] && die Usage: node_version node-name.

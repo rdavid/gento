@@ -7,7 +7,7 @@
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
 	BASE_APP_USAGE=Usage:\ gento\ settings-cnf-name.yml. \
-	BASE_APP_VERSION=0.9.20230227 \
+	BASE_APP_VERSION=0.9.20230308 \
 	BASE_MIN_VERSION=0.9.20230212
 . base.sh
 
@@ -19,12 +19,18 @@ cnfct_version() {
 		ver
 	ver="$(yq .test_network_function_version "$CFG" 2>&1)" ||
 		die Unable to read test_network_function_version from "$CFG": "$ver".
-	[ "$ver" = null ] || { printf %s "$ver"; return 0;}
+	[ "$ver" = null ] || {
+		printf %s "$ver"
+		return 0
+	}
 	logw Unable to read CNFCT version from "$CFG"
 	is_readable $def >/dev/null || die $def is not readable.
 	ver="$(yq .test_network_function_version $def 2>&1)" ||
 		die Unable to read test_network_function_version from "$def": "$ver".
-	[ "$ver" = null ] || { printf %s "$ver"; return 0;}
+	[ "$ver" = null ] || {
+		printf %s "$ver"
+		return 0
+	}
 	die Unable to read CNFCT version from $def.
 }
 
@@ -39,26 +45,29 @@ create_component() {
 			--format json \
 			topic-list \
 			--where name:"$topic_name" |
-		jq --raw-output '.topics[].id'
+			jq --raw-output '.topics[].id'
 	)" || die Unable to read dci_topic_id for "$topic_name".
 	team_id="$(
 		dcictl \
 			--format json \
 			team-list |
-		jq \
-			--arg team_name "$DCI_TEAM_NAME" \
-			--raw-output '.teams[] | select(.name == $team_name) | .id'
+			jq \
+				--arg team_name "$DCI_TEAM_NAME" \
+				--raw-output '.teams[] | select(.name == $team_name) | .id'
 	)" || die Unable to read dci_team_id for "$DCI_TEAM_NAME".
 	log "The components have topic_id=$topic_id and team_id=$team_id."
-	for arg do
+	for arg; do
 		lines="$(
 			dcictl \
 				component-list \
 				--topic-id "$topic_id" \
 				--where name:"$arg" |
-			wc -l
+				wc -l
 		)"
-		[ "$lines" -le 4 ] || { log Exists "$arg".; continue;}
+		[ "$lines" -le 4 ] || {
+			log Exists "$arg".
+			continue
+		}
 		dcictl \
 			--format json \
 			component-create \
@@ -80,8 +89,12 @@ extract_image_version() {
 	ver="$(
 		printf %s "$str" |
 			grep --only-matching --perl-regexp \
-			'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)'
-	)" || { logw No four digits in "$str".; semver "$str"; return 0;}
+				'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)'
+	)" || {
+		logw No four digits in "$str".
+		semver "$str"
+		return 0
+	}
 	printf %s "$ver"
 }
 
@@ -130,7 +143,7 @@ is_cnf_running() {
 				yes_to_continue \
 					There is no a running pod with "$lb" in "$ns", continue?
 		done
-		i=$((i+1))
+		i=$((i + 1))
 	done
 }
 
@@ -170,8 +183,8 @@ images_versions_ns() {
 			--output=custom-columns='DATA:spec.containers[*].image'
 	)" || {
 		logw Unable to extract an image from namespace "$ns": "$images"
-			printf %s $err
-			return 0
+		printf %s $err
+		return 0
 	}
 	[ -n "$images" ] || {
 		logw There is no image in namespace "$ns".
@@ -304,9 +317,9 @@ node_version() {
 	[ -z "${1-}" ] && die Usage: node_version node-name.
 	local err=none manufac node="$1" out product
 	out="$(
-		oc debug node/"$node" --quiet 2>&1 -- sh -c '\
+		oc debug node/"$node" --quiet -- sh -c '\
 			dmidecode -s system-manufacturer 2>&1 &&
-			dmidecode -s system-product-name 2>&1'
+			dmidecode -s system-product-name 2>&1' 2>&1
 	)" || die Unable to run debug pod at node "$node": "$out"
 	manufac="$(printf %s "$out" | tail -2 | head -1 | xargs)"
 	manufac="${manufac:=$err}"
@@ -454,12 +467,12 @@ validate_env() {
 
 	# Makes sure DCI server is available.
 	url_exists "$DCI_CS_URL" || {
-			validate_var \
-				http_proxy \
-				https_proxy \
-				no_proxy
-			die Check HTTP proxy configuration.
-		}
+		validate_var \
+			http_proxy \
+			https_proxy \
+			no_proxy
+		die Check HTTP proxy configuration.
+	}
 
 	# Makes sure the cluster is available. Uses the output only in case of an
 	# error.

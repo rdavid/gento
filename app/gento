@@ -7,7 +7,7 @@
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
 	BASE_APP_USAGE=Usage:\ gento\ settings-cnf-name.yml. \
-	BASE_APP_VERSION=0.9.20230308 \
+	BASE_APP_VERSION=0.9.20230309 \
 	BASE_MIN_VERSION=0.9.20230308
 . base.sh
 
@@ -102,7 +102,7 @@ extract_image_version() {
 # Composes Ansible parameters for Helm Charts tests.
 helm_charts() {
 	local cfg
-	cfg="$(dirname "$(realpath "$0")")/helm-charts-$CNF.yml" || die
+	cfg="$(realdir "$0")/helm-charts-$CNF.yml" || die
 
 	# The function returns string as output, the following two functions produce
 	# information strings, do not add those to the output.
@@ -381,7 +381,7 @@ parse_input() {
 		CNF="${CNF%%.*}"
 		CNF="${CNF#*settings-}"
 	else
-		CFG="$(dirname "$(realpath "$0")")/settings-$str.yml" || die
+		CFG="$(realdir "$0")/settings-$str.yml" || die
 		file_exists "$CFG" || die "$str: No such file. $BASE_APP_USAGE"
 		log Gento is ran in legacy mode.
 		CNF="$str"
@@ -412,9 +412,9 @@ read_info() {
 # Adds environment variables for DCI if a resource file exists next to the
 # settings file. Otherwise DCI Agent will use default resource file.
 resource() {
-	local rc
-	rc="$(dirname "$(realpath "$CFG")")" || die
-	inside "$CNF" test && rc="$rc"/dcirc-test.sh || rc="$rc"/dcirc.sh
+	local dir rc
+	dir="$(realdir "$CFG")" || die
+	inside "$CNF" test && rc="$dir"/dcirc-test.sh || rc="$dir"/dcirc.sh
 	file_exists "$rc" || return 0
 	is_readable "$rc" || die
 

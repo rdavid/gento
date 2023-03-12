@@ -7,8 +7,8 @@
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
 	BASE_APP_USAGE=Usage:\ gento\ settings-cnf-name.yml. \
-	BASE_APP_VERSION=0.9.20230309 \
-	BASE_MIN_VERSION=0.9.20230308
+	BASE_APP_VERSION=0.9.20230313 \
+	BASE_MIN_VERSION=0.9.20230312
 . base.sh
 
 # First extracts a version from a sidecar settings file, on failure extracts
@@ -24,7 +24,7 @@ cnfct_version() {
 		return 0
 	}
 	logw Unable to read CNFCT version from "$CFG"
-	is_readable $def >/dev/null || die $def is not readable.
+	isreadable $def >/dev/null || die $def is not readable.
 	ver="$(yq .test_network_function_version $def 2>&1)" ||
 		die Unable to read test_network_function_version from "$def": "$ver".
 	[ "$ver" = null ] || {
@@ -107,7 +107,7 @@ helm_charts() {
 	# The function returns string as output, the following two functions produce
 	# information strings, do not add those to the output.
 	file_exists "$cfg" >/dev/null || return 0
-	is_readable "$cfg" >/dev/null || die
+	isreadable "$cfg" >/dev/null || die
 	printf -- " \
 --extra-vars \"kubeconfig_path\"=\"%s\" \
 --extra-vars \"do_chart_verifier\"=\"true\" \
@@ -307,9 +307,9 @@ main() {
 			-- \
 			--extra-vars \{\"dci_components_by_query\":["$coms"]\}$charts \
 			--extra-vars \{\"dci_tags\":["$tags"]\} \
-			2>&1 1>&3 3>&- | to_loge
+			2>&1 1>&3 3>&- | tologe
 	} \
-		3>&1 1>&2 | to_log
+		3>&1 1>&2 | tolog
 }
 
 # Gets node hardware version by node name. xargs trims white spaces and
@@ -416,7 +416,7 @@ resource() {
 	dir="$(realdir "$CFG")" || die
 	inside "$CNF" test && rc="$dir"/dcirc-test.sh || rc="$dir"/dcirc.sh
 	file_exists "$rc" || return 0
-	is_readable "$rc" || die
+	isreadable "$rc" || die
 
 	# shellcheck disable=SC1090 # File not following.
 	. "$rc"
@@ -425,9 +425,9 @@ resource() {
 
 # Checks various aspects of an environment.
 validate_env() {
-	be_user dci-openshift-app-agent
+	beuser dci-openshift-app-agent
 	parse_input "$@"
-	is_readable "$CFG" || die "$CFG" is not readable.
+	isreadable "$CFG" || die "$CFG" is not readable.
 
 	# DCI works with absolute paths, makes sure parent directories are readable.
 	realpath "$CFG" >/dev/null 2>&1 || die
@@ -450,15 +450,11 @@ validate_env() {
 		KUBECONFIG \
 		XDG_RUNTIME_DIR
 	file_exists "$KUBECONFIG" || die "$KUBECONFIG": No such file.
-	is_writable "$KUBECONFIG" || die "$KUBECONFIG" is not writable.
+	iswritable "$KUBECONFIG" || die "$KUBECONFIG" is not writable.
 	[ -O "$KUBECONFIG" ] ||
 		die "$KUBECONFIG" should be owned by dci-openshift-app-agent.
 	file_exists "$XDG_RUNTIME_DIR" || die "$XDG_RUNTIME_DIR": No such file.
-	is_writable "$XDG_RUNTIME_DIR" || die "$XDG_RUNTIME_DIR" is not writable.
-
-	# Continues only with certain shellbase version.
-	ver_ge "$BASE_VERSION" $BASE_MIN_VERSION ||
-		die Shellbase is "$BASE_VERSION", needs $BASE_MIN_VERSION or above.
+	iswritable "$XDG_RUNTIME_DIR" || die "$XDG_RUNTIME_DIR" is not writable.
 
 	# Makes sure DCI server is available.
 	url_exists "$DCI_CS_URL" || {

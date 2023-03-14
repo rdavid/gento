@@ -6,9 +6,9 @@
 * [License](#license)
 
 ## About
-Hello, I'm [David Rabkin](http://cv.rabkin.co.il). Gento enables Cloud-Native
-Applications and Operators in OpenShift using Red Hat Distributed CI service.
-Currently it is supported only in RHEL8.
+`gento` enables Cloud-Native Applications and Operators in OpenShift using Red
+Hat Distributed CI service via
+[DCI OpenShift App Agent](https://github.com/redhat-cip/dci-openshift-app-agent).
 
 ## Install
 The artifact is a single executable POSIX-compliant shell script file

@@ -1,4 +1,4 @@
-# GentO
+# Gento
 
 [![linters](https://github.com/rdavid/gento/actions/workflows/lint.yml/badge.svg)](https://github.com/rdavid/gento/actions/workflows/lint.yml)
 [![hits of code](https://hitsofcode.com/github/rdavid/gento?branch=master&label=hits%20of%20code)](https://hitsofcode.com/view/github/rdavid/gento?branch=master)
@@ -13,7 +13,7 @@
 
 ## About
 
-GentO stands for aGent of Red Hat OpenShift. It enables Cloud-Native
+Gento stands for aGent of Red Hat OpenShift. It enables Cloud-Native
 Applications and Operators in OpenShift using Red Hat Distributed CI service
 via
 [DCI OpenShift App Agent](https://github.com/redhat-cip/dci-openshift-app-agent).

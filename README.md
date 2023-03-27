@@ -13,7 +13,7 @@
 
 ## About
 
-Gento stands for aGent of Red Hat OpenShift. It enables Cloud-Native
+Gento stands for `aGent of Red Hat OpenShift`. It enables Cloud-Native
 Applications and Operators in OpenShift using Red Hat Distributed CI service
 via
 [DCI OpenShift App Agent](https://github.com/redhat-cip/dci-openshift-app-agent).

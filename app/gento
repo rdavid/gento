@@ -260,14 +260,7 @@ main() {
 \"name:$OC_CLIENT\",\
 \"name:$RHCOS\",\
 \"name:$SHELLBASE\""
-	tags="\
-\"$CNFA\",\
-\"$CNFCT\",\
-\"$GENTO\",\
-\"$KUBE\",\
-\"$OC_CLIENT\",\
-\"$RHCOS\",\
-\"$SHELLBASE\""
+	tags="$(timestamp)" || die
 
 	# The function is ran in sub-process, additional die is needed.
 	charts="$(helm_charts)" || die
@@ -281,7 +274,6 @@ main() {
 		com="p $(printf %s "$image" | tr : \ )"
 		create_component "$com"
 		coms="$coms,\"name:$com\""
-		tags="$tags,\"$com\""
 	done
 
 	# Reads nodes from cluster and composes in format:

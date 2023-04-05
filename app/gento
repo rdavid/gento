@@ -7,7 +7,7 @@
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
 	BASE_APP_USAGE=Usage:\ gento\ settings-cnf-name.yml. \
-	BASE_APP_VERSION=0.9.20230404 \
+	BASE_APP_VERSION=0.9.20230405 \
 	BASE_MIN_VERSION=0.9.20230312
 . base.sh
 
@@ -436,6 +436,7 @@ validate_env() {
 		oc \
 		sort \
 		wget \
+		which \
 		yq
 	validate_var \
 		DCI_API_SECRET \

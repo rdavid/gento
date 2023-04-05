@@ -6,7 +6,7 @@
 # shellcheck disable=SC3043 # Uses local variables.
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20230326 \
+	BASE_APP_VERSION=0.9.20230405 \
 	DST=/usr/local/bin \
 	GOR=0.9.20230313 \
 	PKG="\
@@ -16,7 +16,8 @@ dci-openshift-agent \
 dci-openshift-app-agent \
 jq \
 python3-dciclient \
-tar" \
+tar \
+which" \
 	SHR=0.9.20230312 \
 	USR=dci-openshift-app-agent \
 	YQR=4.33.1

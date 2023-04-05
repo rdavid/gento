@@ -8,7 +8,7 @@
 readonly \
 	BASE_APP_USAGE=Usage:\ gento\ settings-cnf-name.yml. \
 	BASE_APP_VERSION=0.9.20230405 \
-	BASE_MIN_VERSION=0.9.20230312
+	BASE_MIN_VERSION=0.9.20230405
 . base.sh
 
 # First extracts a version from a sidecar settings file, on failure extracts

@@ -27,6 +27,19 @@ readonly \
 	SH=https://github.com/rdavid/shellbase/archive/refs/tags/v$SHR.tar.gz \
 	YQ=https://github.com/mikefarah/yq/releases/download/v$YQR/yq_linux_amd64
 
+# Downloads an archive, extracts, and puts a single file to the destination.
+# The first parameter is an package name, the second is an URL of an archive,
+# the lasted arguments are a position of a file inside the archive to extract
+# and install.
+install_arc() {
+	local pkg="$1" url="$2"
+	shift 2
+	curl --location --silent "$url" |
+		tar --directory $DST --extract --gzip "$@" ||
+		die Failed to download and extract "$pkg".
+	log "$pkg" is installed or upgraded.
+}
+
 # Installs or updates needful RHEL packages. dnf upgrade does not fail if
 # multiple packages are listed, and a single package succeeds, hence upgrade
 # packages one by one.
@@ -37,44 +50,6 @@ install_dnf() {
 			die "Failed to install or upgrade $pkg. $out"
 		log "$pkg" is installed or upgraded.
 	done
-}
-
-# Downloads archive, extracts, and puts the single file to the destination.
-install_gento() {
-	curl --location --silent $GO |
-		tar \
-			--directory $DST \
-			--extract \
-			--gzip \
-			--strip-components=2 \
-			gento-$GOR/app/gento ||
-		die Unable to install gento.
-	log gento is installed or upgraded.
-}
-
-# Downloads archive, extracts, and puts the single file to the destination.
-install_oc() {
-	curl --location --silent $OC |
-		tar \
-			--directory $DST \
-			--extract \
-			--gzip \
-			oc ||
-		die Unable to download and extract $OC.
-	log oc is installed or upgraded.
-}
-
-# Downloads archive, extracts, and puts the single file to the destination.
-install_shellbase() {
-	curl --location --silent $SH |
-		tar \
-			--directory $DST \
-			--extract \
-			--gzip \
-			--strip-components=2 \
-			shellbase-$SHR/lib/base.sh ||
-		die Unable to install shellbase.
-	log shellbase is installed or upgraded.
 }
 
 # Downloads the executable to the destination.
@@ -88,10 +63,10 @@ install_yq() {
 # Validates the environment and installs the software.
 main() {
 	validate
+	install_arc gento $GO --strip-components=2 gento-$GOR/app/gento
+	install_arc oc $OC oc
+	install_arc shellbase $SH --strip-components=2 shellbase-$SHR/lib/base.sh
 	install_dnf
-	install_gento
-	install_oc
-	install_shellbase
 	install_yq
 }
 

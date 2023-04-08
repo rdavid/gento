@@ -6,7 +6,7 @@
 # shellcheck disable=SC3043 # Uses local variables.
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20230406 \
+	BASE_APP_VERSION=0.9.20230408 \
 	DST=/usr/local/bin \
 	GOR=0.9.20230405 \
 	PKG="\
@@ -108,7 +108,7 @@ shellbase() {
 	)"
 	[ -n "${BASE_VERSION+x}" ] || {
 		printf >&2 No\ shellbase.\\n
-		exit 14
+		exit 3
 	}
 }
 
@@ -118,12 +118,12 @@ validate() {
 	for pkg in curl tar; do
 		command -v $pkg >/dev/null 2>&1 || {
 			printf >&2 Install\ %s.\\n $pkg
-			exit 12
+			exit 1
 		}
 	done
 	curl --fail --head --output /dev/null --silent $SH || {
 		printf >&2 '%s is unavailable.\n' $SH
-		exit 13
+		exit 2
 	}
 	shellbase
 	beroot

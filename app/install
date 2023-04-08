@@ -70,26 +70,10 @@ main() {
 	install_yq
 }
 
-# Uses Unix shell framework shellbase:
-#  https://github.com/rdavid/shellbase/
+# Installs shellbase to the current shell session. Packages curl and tar are
+# required.
 shellbase() {
-	eval "$(
-		curl --location --silent $SH |
-			tar \
-				--extract \
-				--gzip \
-				--to-stdout \
-				shellbase-$SHR/lib/base.sh
-	)"
-	[ -n "${BASE_VERSION+x}" ] || {
-		printf >&2 No\ shellbase.\\n
-		exit 3
-	}
-}
-
-# Certain packages should be installed.
-validate() {
-	local dir pkg uid
+	local pkg
 	for pkg in curl tar; do
 		command -v $pkg >/dev/null 2>&1 || {
 			printf >&2 Install\ %s.\\n $pkg
@@ -100,8 +84,25 @@ validate() {
 		printf >&2 '%s is unavailable.\n' $SH
 		exit 2
 	}
-	shellbase
+	eval "$(
+		curl --location --silent $SH |
+			tar --extract --gzip --to-stdout shellbase-$SHR/lib/base.sh
+	)"
+	[ -n "${BASE_VERSION+x}" ] || {
+		printf >&2 No\ shellbase.\\n
+		exit 3
+	}
+	log Shellbase is installed to the current shell session.
+}
+
+# Uses functions of shellbase to validate the environment.
+validate() {
+	local dir uid
+
+	# shellcheck disable=SC1091,SC2015 # File not following, A && B || C.
+	[ -r $DST/base.sh ] && . $DST/base.sh || shellbase
 	beroot
+	validate_cmd curl dnf install tar
 	iswritable $DST || die $DST is not writable.
 	url_exists $GO $OC $SH $YQ || die
 	user_exists $USR || die $USR: Not such user.

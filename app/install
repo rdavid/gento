@@ -3,8 +3,7 @@
 # Copyright 2023 David Rabkin
 # Uses Unix shell framework shellbase:
 #  https://github.com/rdavid/shellbase/
-# shellcheck disable=SC3043 # Uses local variables.
-# shellcheck disable=SC1091,SC2034 # File not following, appears unused.
+# shellcheck disable=SC3043,SC2034 # Uses local variables, appears unused.
 readonly \
 	BASE_APP_VERSION=0.9.20230408 \
 	DST=/usr/local/bin \

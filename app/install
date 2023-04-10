@@ -91,7 +91,7 @@ shellbase() {
 		printf >&2 No\ shellbase.\\n
 		exit 3
 	}
-	log Shellbase is installed to the current shell session.
+	log shellbase "$BASE_VERSION" is installed to the current shell session.
 }
 
 # Uses functions of shellbase to validate the environment.

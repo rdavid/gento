@@ -5,9 +5,21 @@
 #  https://github.com/rdavid/shellbase/
 # shellcheck disable=SC3043 # Uses local variables.
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
+BASE_APP_USAGE="$(
+	cat <<-EOM 2>&1
+		  filename          TNF settings YAML file.
+
+		The filename is a mandatory parameter. For better reporting use following
+		naming convention settings-[CNF NAME].yml, e.g.:
+		  gento settings-5gc.yml
+	EOM
+)" || {
+	printf >&2 %s\\n "$BASE_APP_USAGE"
+	exit 1
+}
 readonly \
-	BASE_APP_USAGE=Usage:\ gento\ settings-cnf-name.yml. \
-	BASE_APP_VERSION=0.9.20230405 \
+	BASE_APP_USAGE \
+	BASE_APP_VERSION=0.9.20230411 \
 	BASE_MIN_VERSION=0.9.20230405
 . base.sh
 

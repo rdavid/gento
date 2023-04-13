@@ -326,7 +326,7 @@ node_version() {
 		oc debug node/"$node" --quiet -- sh -c "\
 			dmidecode -s system-manufacturer 2>&1 &&
 			dmidecode -s system-product-name 2>&1 &&
-			hostname &&
+			hostname 2>&1 &&
 			$(which prettyuptime); prettyuptime" 2>&1
 	)" || die Unable to run debug pod at node "$node": "$out"
 	manufac="$(printf %s "$out" | tail -4 | head -1 | xargs)"

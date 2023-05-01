@@ -19,7 +19,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20230429 \
+	BASE_APP_VERSION=0.9.20230501 \
 	BASE_MIN_VERSION=0.9.20230405
 . base.sh
 
@@ -252,7 +252,7 @@ images_versions_ns() {
 
 # The argument is a settings file, settings-cnf-name.yml is expected.
 main() {
-	local charts com coms image images node nodes tag tags
+	local charts com coms ifs image images node nodes tag tags
 	[ "$#" -ne 1 ] && die "$BASE_APP_USAGE"
 	validate_env "$@"
 	read_info
@@ -291,13 +291,27 @@ main() {
 	# Reads nodes from cluster and composes in format:
 	#  vendor-a:product-a:name-a:uptime-a vendor-b:product-b:name-b:uptime-b
 	nodes="$(nodes_versions)" || die
+
+	# Nodes are separated by percents. There is the POSIX way to set IFS. Keeps
+	# the default value in a temporarily variable.
+	unset ifs
+	[ -z "${IFS+set}" ] || ifs=$IFS
+	IFS='%'
 	for node in $nodes; do
 		com="$(printf %s "$node" | awk -F : '{print "n "$1" "$2}')"
-		create_component "$com"
+
+		# Returns IFS temporarily in a sub-shell.
+		(
+			unset IFS
+			[ -z "${ifs+set}" ] || IFS=$ifs
+			create_component "$com"
+		)
 		coms="$coms,\"name:$com\""
-		tag="$(printf %s "$node" | awk -F : '{$1=$2=""; print $0}')"
+		tag="$(printf %s "$node" | awk -F : '{print $3" "$4}')"
 		tags="$tags,\"$tag\""
 	done
+	unset IFS
+	[ -z "${ifs+set}" ] || IFS=$ifs
 
 	# Ansible inside dci-openshift-app-agent-ctl uses it for colorful output.
 	export ANSIBLE_FORCE_COLOR=True
@@ -341,7 +355,7 @@ node_version() {
 }
 
 # Lists nodes manufactors and product names, e.g.:
-# Supermicro:SYS-1019P-XXXXX:foo:1:day:1:hour\0Dell:R740:bar:2:days:2:hours
+#  Supermicro:SYS-1019P-XXXXX:hostname1:1 day 1 hour%Dell Inc.:PowerEdge R750:hostname2:2 days 2 hours
 nodes_versions() {
 	local once=true node nodes versions=none
 	nodes="$(
@@ -364,10 +378,8 @@ nodes_versions() {
 	# Replaces the separator between nodes. Removes commas from the string, it
 	# breaks parameters.
 	printf %s "$versions" |
-		tr % \\0 |
 		sed s/,//g |
 		xargs --max-args=1 --null |
-		tr \  : |
 		xargs
 }
 

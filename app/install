@@ -5,7 +5,7 @@
 #  https://github.com/rdavid/shellbase/
 # shellcheck disable=SC3043,SC2034 # Uses local variables, appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20230501 \
+	BASE_APP_VERSION=0.9.20230509 \
 	DST=/usr/local/bin \
 	GOR=0.9.20230501 \
 	PKG="\
@@ -17,7 +17,7 @@ jq \
 python3-dciclient \
 tar \
 which" \
-	SHR=0.9.20230405 \
+	SHR=0.9.20230505 \
 	USR=dci-openshift-app-agent \
 	YQR=4.33.3
 readonly \

@@ -19,7 +19,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20230510 \
+	BASE_APP_VERSION=0.9.20230511 \
 	BASE_MIN_VERSION=0.9.20230505
 . base.sh
 
@@ -86,9 +86,8 @@ create_component() {
 			component-create \
 			--topic-id "$topic_id" \
 			--team-id "$team_id" \
-			--name "$arg" \
-			--canonical_project_name "$arg" \
-			--type pkg >/dev/null ||
+			--type pkg \
+			"$arg" >/dev/null ||
 			die "Failed to create $arg for topic_id=$topic_id and team_id=$team_id."
 		log "Creates $arg for topic_id=$topic_id and team_id=$team_id."
 	done

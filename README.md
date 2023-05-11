@@ -26,7 +26,7 @@ file from the released version. RHEL demands administrative rights to write to
 `/usr/local/bin`, `sudo` before `tar` is used:
 
 ```sh
-REL=0.9.20230510
+REL=0.9.20230511
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
 curl --location --silent $SRC |
   sudo tar \
@@ -43,7 +43,7 @@ with all dependencies run POSIX-compliant shell script file
 process owned by the superuser:
 
 ```sh
-REL=0.9.20230510
+REL=0.9.20230511
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
 sudo su -c eval -c "$(
   curl --location --silent $SRC |

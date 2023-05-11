@@ -5,10 +5,10 @@
 #  https://github.com/rdavid/shellbase/
 # shellcheck disable=SC3043,SC2034 # Uses local variables, appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20230510 \
+	BASE_APP_VERSION=0.9.20230511 \
 	BASE_MIN_VERSION=0.9.20230505 \
 	DST=/usr/local/bin \
-	GOR=0.9.20230510 \
+	GOR=0.9.20230511 \
 	PKG="\
 curl \
 dci-ansible \

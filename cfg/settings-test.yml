@@ -1,26 +1,12 @@
 # Test dci-openshift-app-agent settings.
 ---
-dci_topic: OCP-4.10
+dci_topic: OCP-4.12
 dci_name: Test
 dci_configuration: Supermicro, SNO, RH Lab
 dci_tags: [test]
 do_cnf_cert: true
 dci_openshift_app_image: quay.io/testnetworkfunction/cnf-test-partner:latest
-tnf_suites: >-
-  access-control
-  affiliated-certification
-  lifecycle
-  networking
-  observability
-  platform-alteration
-# tnf_labels: "\
-#  access-control,\
-#  affiliated-certification,\
-#  lifecycle,\
-#  networking,\
-#  observability,\
-#  platform-alteration\
-#  "
+tnf_labels: common,extended
 dci_teardown_on_success: false
 tnf_log_level: trace
 dci_disconnected: true
@@ -36,7 +22,4 @@ tnf_config:
     operators_regexp:
     exclude_connectivity_regexp:
 dci_gits_to_components: []
-test_network_function_version: v4.0.3
-# test_network_function_version: v4.1.5
-dci_must_gather_images:
-  - registry.redhat.io/openshift4/ose-must-gather
+test_network_function_version: v4.2.4

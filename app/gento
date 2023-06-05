@@ -2,7 +2,7 @@
 # vi:et lbr noet sw=2 ts=2 tw=79 wrap
 # Copyright 2023 David Rabkin
 # Uses Unix shell framework shellbase:
-#  https://github.com/rdavid/shellbase/
+#  https://github.com/rdavid/shellbase
 # shellcheck disable=SC3043 # Uses local variables.
 # shellcheck disable=SC1091,SC2034 # File not following, appears unused.
 BASE_APP_USAGE="$(
@@ -19,8 +19,8 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20230511 \
-	BASE_MIN_VERSION=0.9.20230505
+	BASE_APP_VERSION=0.9.20230605 \
+	BASE_MIN_VERSION=0.9.20230605
 . base.sh
 
 # First extracts a version from a sidecar settings file, on failure extracts
@@ -104,8 +104,10 @@ extract_image_version() {
 				'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)'
 	)" || {
 		logw No four digits in "$str".
-		semver "$str"
-		return 0
+		ver="$(semver "$str")" || {
+			logw No semver in "$str".
+			ver="$str"
+		}
 	}
 	printf %s "$ver"
 }

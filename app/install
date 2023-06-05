@@ -5,7 +5,7 @@
 #  https://github.com/rdavid/shellbase/
 # shellcheck disable=SC3043,SC2034 # Uses local variables, appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20230525 \
+	BASE_APP_VERSION=0.9.20230607 \
 	BASE_MIN_VERSION=0.9.20230505 \
 	DST=/usr/local/bin \
 	GOR=0.9.20230511 \
@@ -73,16 +73,18 @@ main() {
 # Installs shellbase to the current shell session. Packages curl and tar are
 # required.
 shellbase() {
-	local pkg
+	local err pkg
 	for pkg in curl tar; do
 		command -v $pkg >/dev/null 2>&1 || {
+			err=$?
 			printf >&2 Install\ %s.\\n $pkg
-			exit 1
+			exit $err
 		}
 	done
 	curl --fail --head --output /dev/null --silent $SH || {
+		err=$?
 		printf >&2 '%s is unavailable.\n' $SH
-		exit 2
+		exit $err
 	}
 	eval "$(
 		curl --location --silent $SH |
@@ -90,7 +92,7 @@ shellbase() {
 	)"
 	[ -n "${BASE_VERSION+x}" ] || {
 		printf >&2 No\ shellbase.\\n
-		exit 3
+		exit 1
 	}
 	log shellbase "$BASE_VERSION" is installed to the current shell session.
 }

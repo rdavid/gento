@@ -14,8 +14,9 @@ BASE_APP_USAGE="$(
 		  gento settings-5gc.yml
 	EOM
 )" || {
+	local err=$?
 	printf >&2 %s\\n "$BASE_APP_USAGE"
-	exit 1
+	exit $err
 }
 readonly \
 	BASE_APP_USAGE \

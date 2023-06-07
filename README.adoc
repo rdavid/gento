@@ -1,0 +1,80 @@
+// Settings:
+:toc: macro
+:!toc-title:
+// URLs:
+:url-cv: http://cv.rabkin.co.il
+:url-dci: https://github.com/redhat-cip/dci-openshift-app-agent
+:url-gento: https://github.com/rdavid/gento/blob/master/app/gento
+:url-install: https://github.com/rdavid/gento/blob/master/app/install
+:url-license: https://github.com/rdavid/gento/blob/master/LICENSE
+:url-shellbase: https://github.com/rdavid/shellbase
+
+= Gento
+
+image:https://github.com/rdavid/gento/actions/workflows/lint.yml/badge.svg[linters,link=https://github.com/rdavid/gento/actions/workflows/lint.yml]
+image:https://hitsofcode.com/github/rdavid/gento?branch=master&label=hits%20of%20code[hits of code,link=https://hitsofcode.com/view/github/rdavid/gento?branch=master]
+image:https://img.shields.io/github/v/release/rdavid/gento?color=blue&label=%20&logo=semver&logoColor=white&style=flat[release),link=https://github.com/rdavid/gento/releases]
+image:https://img.shields.io/badge/red%20hat---?color=gray&logo=redhat&logoColor=red&style=flat[red hat,link=https://www.redhat.com]
+image:https://img.shields.io/badge/openshift---?color=gray&logo=redhatopenshift&logoColor=red&style=flat[openshift,link=https://www.redhat.com/en/technologies/cloud-computing/openshift]
+image:https://img.shields.io/github/license/rdavid/gento?color=blue&labelColor=gray&logo=freebsd&logoColor=lightgray&style=flat[license,link=https://github.com/rdavid/gento/blob/master/LICENSE]
+
+toc::[]
+
+== About
+
+Gento stands for `aGent of Red Hat OpenShift`.
+It enables Cloud-Native Applications and Operators in OpenShift using Red Hat
+Distributed CI service via {url-dci}[DCI OpenShift App Agent].
+
+== Install
+
+The artifact is a single executable POSIX-compliant shell script file
+{url-gento}[`gento`].
+Install the file from the released version. RHEL demands administrative rights
+to write to `/usr/local/bin`, `sudo` before `tar` is used:
+
+[,sh]
+----
+REL=0.9.20230511
+SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
+curl --location --silent $SRC |
+  sudo tar \
+    --directory /usr/local/bin \
+    --extract \
+    --gzip \
+    --strip-components=2 \
+    gento-$REL/app/gento
+----
+
+To install {url-gento}[`gento`] with all dependencies run POSIX-compliant shell
+script file {url-install}[`install`] as a process owned by the superuser:
+
+[,sh]
+----
+REL=0.9.20230511
+SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
+sudo su -c eval -c "$(
+  curl --location --silent $SRC |
+    tar \
+      --extract \
+      --gzip \
+      --to-stdout \
+      gento-$REL/app/install
+)"
+----
+
+Run {url-gento}[`gento`] as `dci-openshift-app-agent` user, the parameter is a
+DCI settings file, expected name pattern is `settings-cnf-name.yml` for better
+reporting.
+Make sure `/usr/local/bin` is in `dci-openshift-app-agent` user's `PATH`.
+
+[,sh]
+----
+sudo su - dci-openshift-app-agent
+gento settings-cnf-name.yml
+----
+
+== License
+
+`gento` is copyright {url-cv}[David Rabkin] and available under a
+{url-license}[Zero-Clause BSD license].

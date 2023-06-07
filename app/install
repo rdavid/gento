@@ -18,7 +18,7 @@ jq \
 python3-dciclient \
 tar \
 which" \
-	SHR=0.9.20230505 \
+	SHR=0.9.20230606 \
 	USR=dci-openshift-app-agent \
 	YQR=4.34.1
 readonly \

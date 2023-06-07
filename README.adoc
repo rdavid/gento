@@ -35,7 +35,7 @@ to write to `/usr/local/bin`, `sudo` before `tar` is used:
 
 [,sh]
 ----
-REL=0.9.20230511
+REL=0.9.20230607
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
 curl --location --silent $SRC |
   sudo tar \
@@ -51,7 +51,7 @@ script file {url-install}[`install`] as a process owned by the superuser:
 
 [,sh]
 ----
-REL=0.9.20230511
+REL=0.9.20230607
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
 sudo su -c eval -c "$(
   curl --location --silent $SRC |

@@ -20,8 +20,8 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20230605 \
-	BASE_MIN_VERSION=0.9.20230605
+	BASE_APP_VERSION=0.9.20230607 \
+	BASE_MIN_VERSION=0.9.20230606
 . base.sh
 
 # First extracts a version from a sidecar settings file, on failure extracts

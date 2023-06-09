@@ -1,3 +1,5 @@
+.redo
+lint
 styles/.vale-config
 styles/alex
 styles/Google

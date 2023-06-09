@@ -5,9 +5,16 @@
 :url-cv: http://cv.rabkin.co.il
 :url-dci: https://github.com/redhat-cip/dci-openshift-app-agent
 :url-gento: https://github.com/rdavid/gento/blob/master/app/gento
+:url-goredo: http://www.goredo.cypherpunks.ru/Install.html
+:url-hadolint: https://github.com/hadolint/hadolint
 :url-install: https://github.com/rdavid/gento/blob/master/app/install
 :url-license: https://github.com/rdavid/gento/blob/master/LICENSE
+:url-redo: http://cr.yp.to/redo.html
 :url-shellbase: https://github.com/rdavid/shellbase
+:url-shellcheck: https://github.com/koalaman/shellcheck
+:url-shfmt: https://github.com/mvdan/sh
+:url-vale: https://vale.sh
+:url-yamllint: https://github.com/adrienverge/yamllint
 
 = Gento
 
@@ -73,6 +80,14 @@ Make sure `/usr/local/bin` is in `dci-openshift-app-agent` user's `PATH`.
 sudo su - dci-openshift-app-agent
 gento settings-cnf-name.yml
 ----
+
+== Test
+
+The project uses Daniel J. Bernstein's build system {url-redo}[`redo`].
+You can install Sergey Matveev's {url-goredo}[`goredo`] implementation.
+`redo lint` applies the following linters to the source files:
+{url-shellcheck}[`shellcheck`], {url-shfmt}[`shfmt`], {url-vale}[`vale`],
+{url-yamllint}[`yamllint`].
 
 == License
 

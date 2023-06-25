@@ -20,7 +20,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20230612 \
+	BASE_APP_VERSION=0.9.20230626 \
 	BASE_MIN_VERSION=0.9.20230606
 . base.sh
 
@@ -320,7 +320,7 @@ main() {
 
 	# shellcheck disable=SC2086 # Double quotes.
 	# dci-openshift-app-agent-ctl handles the parameters as array, everything is
-	# formated right. stdout goes to regular log, stderr goes to error log.
+	# formatted right. stdout goes to regular log, stderr goes to error log.
 	{
 		dci-openshift-app-agent-ctl \
 			--config "$CFG" \

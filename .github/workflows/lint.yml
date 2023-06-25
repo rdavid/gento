@@ -15,6 +15,7 @@ jobs:
           additional_files: app/* cfg/*.sh
       - uses: mfinelli/setup-shfmt@v2
       - run: shfmt -d app/* cfg/*.sh
+      - uses: crate-ci/typos@master
       - uses: errata-ai/vale-action@reviewdog
         with:
           fail_on_error: true

@@ -20,7 +20,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20230626 \
+	BASE_APP_VERSION=0.9.20230731 \
 	BASE_MIN_VERSION=0.9.20230606
 . base.sh
 
@@ -36,7 +36,7 @@ cnfct_version() {
 		printf %s "$ver"
 		return 0
 	}
-	logw Unable to read CNFCT version from "$CFG"
+	logw Unable to read CNFCT version from "$CFG".
 	isreadable $def >/dev/null 2>&1 || die $def is not readable.
 	ver="$(yq .test_network_function_version $def 2>&1)" ||
 		die Unable to read test_network_function_version from "$def": "$ver".

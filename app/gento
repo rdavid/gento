@@ -20,7 +20,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20230731 \
+	BASE_APP_VERSION=0.9.20230808 \
 	BASE_MIN_VERSION=0.9.20230606
 . base.sh
 
@@ -343,7 +343,7 @@ node_version() {
 			dmidecode -s system-manufacturer 2>&1 &&
 			dmidecode -s system-product-name 2>&1 &&
 			hostname 2>&1 &&
-			$(which prettyuptime); prettyuptime" 2>&1
+			$(which puptime); puptime" 2>&1
 	)" || die Unable to run debug pod at node "$node": "$out"
 	manufac="$(printf %s "$out" | tail -4 | head -1 | xargs)"
 	manufac="${manufac:=$err}"
@@ -408,6 +408,26 @@ parse_input() {
 		CNF="$str"
 	fi
 	readonly CFG CNF
+}
+
+# Displays uptime in a human-readable format. The similar function prettyuptime
+# from Shellbase framework has additional dependencies and cannot be executed
+# in a node as is.
+puptime() {
+	uptime | sed -E '
+		s/^[^,]*up *//
+		s/mins/minutes/
+		s/hrs?/hours/
+		s/([[:digit:]]+):0?([[:digit:]]+)/\1 hours, \2 minutes/
+		s/^1 hours/1 hour/
+		s/ 1 hours/ 1 hour/
+		s/min,/minutes,/
+		s/ 0 minutes,/ less than a minute,/
+		s/ 1 minutes/ 1 minute/
+		s/  / /
+		s/, *[[:digit:]]* users?.*//
+		s/^/↑ /
+	' | tr -d \\n
 }
 
 # Gets local system information.

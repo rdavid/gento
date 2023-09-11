@@ -20,7 +20,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20230808 \
+	BASE_APP_VERSION=0.9.20230912 \
 	BASE_MIN_VERSION=0.9.20230606
 . base.sh
 
@@ -438,7 +438,7 @@ read_info() {
 	KUBE="Kubernetes $(oc version | grep Kubernetes | awk '{print $3}')"
 	OC_CLIENT="oc client $(oc version | grep Client | awk '{print $3}')"
 	RHCOS="RHCOS $(oc adm release info \
-		--output 'jsonpath={.displayVersions.machine-os.Version}' || :)"
+		--output 'jsonpath={.displayVersions.machine-os.Version}' || printf err)"
 	SHELLBASE="shellbase $BASE_VERSION"
 	readonly \
 		CNFA \

@@ -1,0 +1,50 @@
+---
+name: test
+'on': push
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Containerfile
+          recursive: true
+      - uses: ludeeus/action-shellcheck@master
+        with:
+          additional_files: app/* cfg/*.sh
+      - uses: mfinelli/setup-shfmt@v3
+      - run: shfmt -d app/* cfg/*.sh
+      - uses: crate-ci/typos@master
+      - uses: errata-ai/vale-action@reviewdog
+        with:
+          fail_on_error: true
+          files: README.adoc
+      - uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .github/*.yml .github/workflows/*.yml cfg/*.yml
+          strict: true
+  test-macos:
+    runs-on: macos-latest
+    env:
+      BASE_SRC: https://github.com/rdavid/shellbase/archive/refs/tags/v0.9.20230808.tar.gz # yamllint disable-line
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          curl --location --silent $BASE_SRC |
+            tar \
+              --directory /usr/local/bin \
+              --extract \
+              --gzip \
+              --strip-components=2 \
+              shellbase-0.9.20230808/lib/base.sh
+          brew install \
+            asciidoctor \
+            goredo \
+            shellcheck \
+            shfmt \
+            typos-cli \
+            vale \
+            yamllint
+          vale sync
+          redo -xx

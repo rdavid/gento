@@ -19,7 +19,7 @@
 
 = Gento
 
-image:https://github.com/rdavid/gento/actions/workflows/lint.yml/badge.svg[linters,link=https://github.com/rdavid/gento/actions/workflows/lint.yml]
+image:https://github.com/rdavid/gento/actions/workflows/test.yml/badge.svg[tests,link=https://github.com/rdavid/gento/actions/workflows/test.yml]
 image:https://hitsofcode.com/github/rdavid/gento?branch=master&label=hits%20of%20code[hits of code,link=https://hitsofcode.com/view/github/rdavid/gento?branch=master]
 image:https://img.shields.io/github/v/release/rdavid/gento?color=blue&label=%20&logo=semver&logoColor=white&style=flat[release),link=https://github.com/rdavid/gento/releases]
 image:https://img.shields.io/badge/red%20hat---?color=gray&logo=redhat&logoColor=red&style=flat[red hat,link=https://www.redhat.com]

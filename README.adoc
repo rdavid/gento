@@ -44,7 +44,7 @@ Therefore, it is necessary to use `sudo` before executing the `tar` command.
 
 [,sh]
 ----
-REL=0.9.20231111
+REL=0.9.20231212
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
 curl --location --silent $SRC |
   sudo tar \
@@ -60,7 +60,7 @@ script file {url-install}[`install`] as a process owned by the superuser:
 
 [,sh]
 ----
-REL=0.9.20231111
+REL=0.9.20231212
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
 sudo su -c eval -c "$(
   curl --location --silent $SRC |

@@ -36,7 +36,8 @@ Distributed CI service via {url-dci}[DCI OpenShift App Agent].
 
 == Install
 
-The artifact is a standalone, POSIX-compliant shell script file called
+The artifact is a standalone, POSIX-compliant,
+`Portable Operating System Interface for uniX`, shell script file called
 {url-gento}[`gento`].
 Install the file from the officially released versions.
 To write to `/usr/local/bin`, RHEL requires administrative privileges.

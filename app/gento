@@ -1,6 +1,6 @@
 #!/bin/sh
 # vi:et lbr noet sw=2 ts=2 tw=79 wrap
-# Copyright 2023 David Rabkin
+# Copyright 2023-2024 David Rabkin
 # Uses Unix shell framework shellbase:
 #  https://github.com/rdavid/shellbase
 # shellcheck disable=SC2039,SC3043 # Uses local variables.
@@ -20,7 +20,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20231212 \
+	BASE_APP_VERSION=0.9.20240107 \
 	BASE_MIN_VERSION=0.9.20230606
 . base.sh
 
@@ -510,7 +510,7 @@ validate_env() {
 	# Makes sure the cluster is available. Uses the output only in case of an
 	# error.
 	local out
-	out="$(oc get nodes 2>&1)" || die Unable to connect to cluster: "$out".
+	out="$(oc get nodes 2>&1)" || die Unable to connect to cluster: "$out"
 	is_cnf_running
 }
 

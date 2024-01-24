@@ -1,6 +1,6 @@
 # Test dci-openshift-app-agent settings.
 ---
-dci_topic: OCP-4.12
+dci_topic: OCP-4.14
 dci_name: Test
 dci_configuration: Supermicro, SNO, RH Lab
 dci_tags: [test]
@@ -22,4 +22,4 @@ tnf_config:
     operators_regexp:
     exclude_connectivity_regexp:
 dci_gits_to_components: []
-test_network_function_version: v4.2.4
+test_network_function_version: v5.0.1

@@ -10,7 +10,7 @@ redo-ifchange \
 
 # shellcheck disable=SC2034 # Variable appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20240107 \
+	BASE_APP_VERSION=0.9.20240208 \
 	BASE_MIN_VERSION=0.9.20231212 \
 	BSH=/usr/local/bin/base.sh
 [ -r "$BSH" ] || {
@@ -25,7 +25,7 @@ cmd_exists shellcheck && shellcheck ./*.do app/*
 cmd_exists shfmt && shfmt -d ./*.do app/*
 cmd_exists typos && typos
 cmd_exists vale && {
-	vale sync >/dev/null 2>&1 || :
+	vale sync
 	vale README.adoc
 }
 cmd_exists yamllint && yamllint .github/*.yml .github/workflows/*.yml

@@ -1,6 +1,5 @@
 Gento
 Matveev
-openshift
-OpenShift
+[Oo]pen[Ss]hift
 Rabkin
 Sergey

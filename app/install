@@ -5,7 +5,7 @@
 #  https://github.com/rdavid/shellbase/
 # shellcheck disable=SC2034,SC3043 # Uses local variables, appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20240221 \
+	BASE_APP_VERSION=0.9.20240226 \
 	BASE_MIN_VERSION=0.9.20230606 \
 	DST=/usr/local/bin \
 	GOR=0.9.20240202 \
@@ -20,7 +20,7 @@ tar \
 which" \
 	SHR=0.9.20240202 \
 	USR=dci-openshift-app-agent \
-	YQR=4.41.1
+	YQR=4.42.1
 readonly \
 	GO=https://github.com/rdavid/gento/archive/refs/tags/v$GOR.tar.gz \
 	OC=https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/openshift-client-linux.tar.gz \

@@ -8,7 +8,7 @@ readonly \
 	BASE_APP_VERSION=0.9.20240303 \
 	BASE_MIN_VERSION=0.9.20230606 \
 	DST=/usr/local/bin \
-	GOR=0.9.20240202 \
+	GOR=0.9.20240303 \
 	PKG="\
 curl \
 dci-ansible \

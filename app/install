@@ -23,7 +23,7 @@ which" \
 	YQR=4.44.2
 readonly \
 	GO=https://github.com/rdavid/gento/archive/refs/tags/v$GOR.tar.gz \
-	OC=https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/openshift-client-linux.tar.gz \
+	OC=https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.14/openshift-client-linux.tar.gz \
 	SH=https://github.com/rdavid/shellbase/archive/refs/tags/v$SHR.tar.gz \
 	YQ=https://github.com/mikefarah/yq/releases/download/v$YQR/yq_linux_amd64
 

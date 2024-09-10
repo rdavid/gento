@@ -20,8 +20,8 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20240303 \
-	BASE_MIN_VERSION=0.9.20230606
+	BASE_APP_VERSION=0.9.20240911 \
+	BASE_MIN_VERSION=0.9.20240909
 . base.sh
 
 # First extracts a version from a sidecar settings file, on failure extracts
@@ -155,8 +155,8 @@ is_cnf_running() {
 				--no-headers \
 				--output custom-columns=:metadata.name \
 				--selector="$lb" | grep --quiet . ||
-				yes_to_continue \
-					There is no a running pod with "$lb" in "$ns", continue?
+				should_continue \
+					There is no running pod with "$lb" in "$ns", continue || cya
 		done
 		i=$((i + 1))
 	done

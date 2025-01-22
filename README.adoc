@@ -5,7 +5,7 @@
 :url-cv: http://cv.rabkin.co.il
 :url-dci: https://github.com/redhat-cip/dci-openshift-app-agent
 :url-gento: https://github.com/rdavid/gento/blob/master/app/gento
-:url-goredo: http://www.goredo.cypherpunks.ru/Install.html
+:url-goredo: http://www.goredo.cypherpunks.su/Install.html
 :url-hadolint: https://github.com/hadolint/hadolint
 :url-install: https://github.com/rdavid/gento/blob/master/app/install
 :url-license: https://github.com/rdavid/gento/blob/master/LICENSE

@@ -1,11 +1,14 @@
 #!/bin/sh
 # vi:et lbr noet sw=2 ts=2 tw=79 wrap
-# Copyright 2023-2025 David Rabkin
+# SPDX-FileCopyrightText: 2023-2025 David Rabkin
+# SPDX-License-Identifier: 0BSD
+#
 # Uses Unix shell framework shellbase:
 #  https://github.com/rdavid/shellbase/
+#
 # shellcheck disable=SC2034,SC3043 # Uses local variables, appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20250512 \
+	BASE_APP_VERSION=0.9.20250612 \
 	BASE_MIN_VERSION=0.9.20230606 \
 	DST=/usr/local/bin \
 	GOR=0.9.20240303 \

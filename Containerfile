@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2023-2025 David Rabkin
+# SPDX-License-Identifier: 0BSD
 FROM registry.access.redhat.com/ubi8/ubi:8.7
 LABEL maintainer=David\ Rabkin\ <david@rabkin.co.il>
 ENV \

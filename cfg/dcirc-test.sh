@@ -1,6 +1,8 @@
 # shellcheck shell=sh
 # vi:et lbr noet sw=2 ts=2 tw=79 wrap
-# Copyright 2023 David Rabkin
+# SPDX-FileCopyrightText: 2023-2025 David Rabkin
+# SPDX-License-Identifier: 0BSD
+#
 # Test configurations for dci-openshift-app-agent. The file should be sourced
 # to the shell before dci-openshift-app-agent run. You have to export three
 # additional variables:

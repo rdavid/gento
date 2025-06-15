@@ -11,7 +11,7 @@ redo-ifchange \
 
 # shellcheck disable=SC2034 # Variable appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20250612 \
+	BASE_APP_VERSION=0.9.20250615 \
 	BASE_MIN_VERSION=0.9.20231212 \
 	BSH=/usr/local/bin/base.sh
 [ -r "$BSH" ] || {
@@ -22,6 +22,7 @@ set -- "$@" --quiet
 
 # shellcheck disable=SC1090 # File not following.
 . "$BSH"
+cmd_exists reuse && reuse lint
 cmd_exists shellcheck && shellcheck ./*.do app/*
 cmd_exists shfmt && shfmt -d ./*.do app/*
 cmd_exists typos && typos

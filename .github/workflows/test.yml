@@ -21,6 +21,7 @@ jobs:
         with:
           dockerfile: Containerfile
           recursive: true
+      - uses: fsfe/reuse-action@v5
       - uses: ludeeus/action-shellcheck@master
         with:
           additional_files: app/* cfg/*.sh
@@ -49,6 +50,7 @@ jobs:
           brew install \
             asciidoctor \
             goredo \
+            reuse \
             shellcheck \
             shfmt \
             typos-cli \

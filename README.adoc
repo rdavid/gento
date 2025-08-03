@@ -8,6 +8,7 @@
 :img-rh: https://img.shields.io/badge/red%20hat---?color=gray&logo=redhat&logoColor=red&style=flat
 :img-releases: https://img.shields.io/github/v/release/rdavid/gento?color=blue&label=%20&logo=semver&logoColor=white&style=flat
 :img-test: https://github.com/rdavid/gento/actions/workflows/test.yml/badge.svg
+:url-actionlint: https://github.com/rhysd/actionlint
 :url-cv: http://cv.rabkin.co.il
 :url-dci: https://github.com/redhat-cip/dci-openshift-app-agent
 :url-gento: https://github.com/rdavid/gento/blob/master/app/gento
@@ -101,8 +102,13 @@ gento settings-cnf-name.yml
 The project uses Daniel J. Bernstein's build system {url-redo}[`redo`].
 You can install Sergey Matveev's {url-goredo}[`goredo`] implementation.
 `redo lint` applies the following linters to the source files:
-{url-reuse}[`reuse`], {url-shellcheck}[`shellcheck`], {url-shfmt}[`shfmt`],
-{url-typos}[`typos`], {url-vale}[`vale`], {url-yamllint}[`yamllint`].
+{url-actionlint}[`actionlint`],
+{url-reuse}[`reuse`],
+{url-shellcheck}[`shellcheck`],
+{url-shfmt}[`shfmt`],
+{url-typos}[`typos`],
+{url-vale}[`vale`],
+{url-yamllint}[`yamllint`].
 
 == License
 

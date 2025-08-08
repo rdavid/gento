@@ -496,8 +496,6 @@ validate_env() {
 		XDG_RUNTIME_DIR
 	file_exists "$KUBECONFIG" || die "$KUBECONFIG": No such file.
 	iswritable "$KUBECONFIG" || die "$KUBECONFIG" is not writable.
-	[ -O "$KUBECONFIG" ] ||
-		die "$KUBECONFIG" should be owned by dci-openshift-app-agent.
 	file_exists "$XDG_RUNTIME_DIR" || die "$XDG_RUNTIME_DIR": No such file.
 	iswritable "$XDG_RUNTIME_DIR" || die "$XDG_RUNTIME_DIR" is not writable.
 

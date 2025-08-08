@@ -8,7 +8,7 @@
 #
 # shellcheck disable=SC2034,SC3043 # Uses local variables, appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20250804 \
+	BASE_APP_VERSION=0.9.20250808 \
 	BASE_MIN_VERSION=0.9.20230606 \
 	DST=/usr/local/bin \
 	GOR=0.9.20240303 \
@@ -21,7 +21,7 @@ jq \
 python3-dciclient \
 tar \
 which" \
-	SHR=0.9.20250404 \
+	SHR=0.9.20250808 \
 	USR=dci-openshift-app-agent \
 	YQR=4.47.1
 readonly \

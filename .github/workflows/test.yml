@@ -15,7 +15,7 @@ jobs:
           - ubuntu-24.04
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: sudo apt-get install asciidoctor
       - uses: hadolint/hadolint-action@v3.1.0
         with:
@@ -45,7 +45,7 @@ jobs:
           - macos-15
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: |
           brew install \
             asciidoctor \

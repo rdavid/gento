@@ -47,6 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: |
+          brew update
           brew install \
             asciidoctor \
             goredo \

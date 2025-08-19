@@ -3,9 +3,9 @@
 # SPDX-FileCopyrightText: 2023-2025 David Rabkin
 # SPDX-License-Identifier: 0BSD
 redo-ifchange \
-	./*.do \
 	./.github/*.yml \
 	./.github/workflows/*.yml \
+	./*.do \
 	./app/* \
 	./cfg/* \
 	./README.adoc

@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2025 David Rabkin
+# SPDX-License-Identifier: 0BSD
+---
+name: vale
+'on': [pull_request, push]
+jobs:
+  vale:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - run: sudo apt-get install asciidoctor
+      - uses: errata-ai/vale-action@reviewdog
+        with:
+          fail_on_error: true

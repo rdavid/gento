@@ -2,41 +2,12 @@
 # SPDX-License-Identifier: 0BSD
 ---
 name: test
-'on': push
+'on': [pull_request, push]
 env:
   BASE_REL: 0.9.20250808
   BASE_SRC: https://github.com/rdavid/shellbase/archive/refs/tags/v0.9.20250808.tar.gz # yamllint disable-line
 jobs:
-  test-linux:
-    strategy:
-      matrix:
-        os:
-          - ubuntu-22.04
-          - ubuntu-24.04
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v5
-      - run: sudo apt-get install asciidoctor
-      - uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: Containerfile
-          recursive: true
-      - uses: fsfe/reuse-action@v5
-      - uses: ludeeus/action-shellcheck@master
-        with:
-          additional_files: app/* cfg/*.sh
-      - uses: mfinelli/setup-shfmt@v3
-      - run: shfmt -d app/* cfg/*.sh
-      - uses: crate-ci/typos@master
-      - uses: errata-ai/vale-action@reviewdog
-        with:
-          fail_on_error: true
-          files: README.adoc
-      - uses: ibiqlik/action-yamllint@v3
-        with:
-          file_or_dir: .github/*.yml .github/workflows/*.yml cfg/*.yml
-          strict: true
-  test-macos:
+  test:
     strategy:
       matrix:
         os:

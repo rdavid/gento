@@ -12,8 +12,7 @@ redo-ifchange \
 
 # shellcheck disable=SC2034 # Variable appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20250821 \
-	BASE_MIN_VERSION=0.9.20231212 \
+	BASE_APP_VERSION=0.9.20250903 \
 	BSH=/usr/local/bin/base.sh
 [ -r "$BSH" ] || {
 	printf >&2 Install\ Shellbase.\\n
@@ -23,6 +22,7 @@ set -- "$@" --quiet
 
 # shellcheck disable=SC1090 # File not following.
 . "$BSH"
+cmd_exists actionlint && actionlint
 cmd_exists reuse && reuse lint
 cmd_exists shellcheck && shellcheck ./*.do ./app/* ./cfg/*.sh
 cmd_exists shfmt && shfmt -d ./*.do ./app/* ./cfg/*.sh
@@ -32,7 +32,10 @@ cmd_exists vale && {
 	vale ./README.adoc
 }
 cmd_exists yamllint &&
-	yamllint ./.github/*.yml ./.github/workflows/*.yml ./cfg/*.yml
+	yamllint \
+		./.github/*.yml \
+		./.github/workflows/*.yml \
+		./cfg/*.yml
 
 # Gracefully handle missing last tool without failing the script.
 :

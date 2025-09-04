@@ -19,7 +19,6 @@ RUN \
 	&& dnf install --assumeyes --disableplugin=subscription-manager \
 		bash-4.4.20 \
 		findutils-4.6.0 \
-		shadow-utils \
 	&& dnf clean all --disableplugin=subscription-manager
 USER "$USER"
 WORKDIR /home/"$USER"

@@ -1,9 +1,9 @@
 #!/bin/sh
 # vi:et lbr noet sw=2 ts=2 tw=79 wrap
-# SPDX-FileCopyrightText: 2023-2025 David Rabkin
+# SPDX-FileCopyrightText: 2023-2026 David Rabkin
 # SPDX-License-Identifier: 0BSD
 #
-# Uses Unix shell framework shellbase:
+# Uses the shellbase Unix shell framework:
 #  https://github.com/rdavid/shellbase
 #
 # shellcheck disable=SC2039,SC3043 # Uses local variables.
@@ -23,7 +23,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20250612 \
+	BASE_APP_VERSION=0.9.20260404 \
 	BASE_MIN_VERSION=0.9.20240909
 . base.sh
 
@@ -50,7 +50,7 @@ cnfct_version() {
 	die Unable to read CNFCT version from $def.
 }
 
-# Create a components from the parameters if there are not existed.
+# Creates components from parameters when they do not already exist.
 create_component() {
 	[ -z "${1-}" ] || [ $# -eq 0 ] && die Usage: create_component com1 com2...
 	local arg lines team_id topic_id topic_name

@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2023-2026 David Rabkin
 # SPDX-License-Identifier: 0BSD
 #
-# Uses Unix shell framework shellbase:
+# Uses the shellbase Unix shell framework:
 #  https://github.com/rdavid/shellbase/
 #
 # shellcheck disable=SC2034,SC3043 # Uses local variables, appears unused.
@@ -29,10 +29,11 @@ readonly \
 	SH=https://github.com/rdavid/shellbase/archive/refs/tags/v$SHR.tar.gz \
 	YQ=https://github.com/mikefarah/yq/releases/download/v$YQR/yq_linux_amd64
 
-# Downloads an archive, extracts, and puts a single file to the destination.
-# The first parameter is an package name, the second is an URL of an archive,
-# the lasted arguments are a position of a file inside the archive to extract
-# and install.
+# Downloads an archive, extracts it, and installs a single file to the
+# destination.
+# The first parameter is a package name, the second is a URL for an archive,
+# and the remaining arguments specify the file path inside the archive to
+# extract and install.
 install_arc() {
 	local pkg="$1" url="$2"
 	shift 2
@@ -42,7 +43,7 @@ install_arc() {
 	log "$pkg" is installed or upgraded.
 }
 
-# Installs or updates needful RHEL packages. dnf upgrade does not fail if
+# Installs or updates required RHEL packages. dnf upgrade does not fail if
 # multiple packages are listed, and a single package succeeds, hence upgrade
 # packages one by one.
 install_dnf() {
@@ -109,7 +110,7 @@ validate() {
 	validate_cmd curl dnf install tar
 	iswritable $DST || die $DST is not writable.
 	url_exists $GO $OC $SH $YQ || die
-	user_exists $USR || die $USR: Not such user.
+	user_exists $USR || die $USR: No such user.
 
 	# Verifies that XDG_RUNTIME_DIR exists and accessible by
 	# dci-openshift-app-agent.

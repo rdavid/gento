@@ -34,7 +34,7 @@
 
 image:{img-test}[test,link={url-test}]
 image:{img-hoc}[hits of code,link={url-hoc}]
-image:{img-releases}[release),link={url-releases}]
+image:{img-releases}[release,link={url-releases}]
 image:{img-rh}[red hat,link={url-rh}]
 image:{img-ocp}[openshift,link={url-ocp}]
 image:{img-license}[license,link={url-license}]
@@ -49,10 +49,9 @@ Distributed CI service via {url-dci}[DCI OpenShift App Agent].
 
 == Install
 
-The artifact is a standalone, POSIX-compliant,
-`Portable Operating System Interface for uniX`, shell script file called
+The artifact is a standalone POSIX-compliant shell script named
 {url-gento}[`gento`].
-Install the file from the officially released versions.
+Install it from the official releases.
 To write to `/usr/local/bin`, RHEL requires administrative privileges.
 Therefore, it is necessary to use `sudo` before executing the `tar` command.
 
@@ -69,8 +68,8 @@ curl --location --silent $SRC |
     gento-$REL/app/gento
 ----
 
-To install {url-gento}[`gento`] with all dependencies run POSIX-compliant shell
-script file {url-install}[`install`] as a process owned by the superuser:
+To install {url-gento}[`gento`] with all dependencies, run the
+POSIX-compliant shell script {url-install}[`install`] as `root`:
 
 [,sh]
 ----
@@ -86,9 +85,9 @@ sudo su -c eval -c "$(
 )"
 ----
 
-Run {url-gento}[`gento`] as `dci-openshift-app-agent` user, the parameter is a
-DCI settings file, expected name pattern is `settings-cnf-name.yml` for better
-reporting.
+Run {url-gento}[`gento`] as the `dci-openshift-app-agent` user.
+The parameter is a DCI settings file; for better reporting, use the naming
+pattern `settings-cnf-name.yml`.
 Make sure `/usr/local/bin` is in `dci-openshift-app-agent` user's `PATH`.
 
 [,sh]

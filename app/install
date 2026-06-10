@@ -53,9 +53,9 @@ install_arc() {
 	log "$pkg" is installed or upgraded.
 }
 
-# Installs or updates required RHEL packages. dnf upgrade does not fail if
-# multiple packages are listed, and a single package succeeds, hence upgrade
-# packages one by one.
+# Installs or updates required RHEL packages. dnf returns success even when
+# only one of the listed packages succeeds, so upgrade them one by one to
+# surface every failure.
 install_dnf() {
 	local out pkg
 	for pkg in $PKG; do
@@ -112,7 +112,7 @@ validate() {
 	url_exists $GO $OC $SH $YQ || die
 	user_exists $USR || die $USR: No such user.
 
-	# Verifies that XDG_RUNTIME_DIR exists and accessible by
+	# Verifies that XDG_RUNTIME_DIR exists and is accessible to
 	# dci-openshift-app-agent.
 	uid="$(id -u $USR 2>&1)" || die "$uid"
 	dir=/run/user/"$uid"

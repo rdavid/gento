@@ -51,12 +51,12 @@ main() {
 \"name:$SHELLBASE\""
 	tags="$(timestamp)" || die
 
-	# The function is ran in sub-process, additional die is needed.
+	# The function runs in a sub-process, so the caller needs its own die.
 	charts="$(helm_charts)" || die
 
 	# Reads images from deployments and composes in format:
 	#  name-a:version-a name-b:version-b name-c:version-c
-	# Passes every word in the sentence, there is no need for quotes. Replaces
+	# Splits the string on whitespace; quotes are not needed. Replaces
 	# colon with space for better readability.
 	images="$(images_versions)" || die
 	for image in $images; do
@@ -69,15 +69,15 @@ main() {
 	#  vendor-a:product-a:name-a:uptime-a vendor-b:product-b:name-b:uptime-b
 	nodes="$(nodes_versions)" || die
 
-	# Nodes are separated by percents. There is the POSIX way to set IFS. Keeps
-	# the default value in a temporarily variable.
+	# Nodes are separated by percent signs. Sets IFS the POSIX way and keeps
+	# the default value in a temporary variable.
 	unset ifs
 	[ -z "${IFS+set}" ] || ifs=$IFS
 	IFS='%'
 	for node in $nodes; do
 		com="$(printf %s "$node" | awk -F : '{print "n "$1" "$2}')"
 
-		# Returns IFS temporarily in a sub-shell.
+		# Restores IFS inside the sub-shell.
 		(
 			unset IFS
 			[ -z "${ifs+set}" ] || IFS=$ifs
@@ -108,8 +108,8 @@ main() {
 		3>&1 1>&2 | tolog
 }
 
-# First extracts a version from a sidecar settings file, on failure extracts
-# a version from default file.
+# Extracts the version from the sidecar settings file; falls back to the
+# default file on failure.
 cnfct_version() {
 	local \
 		def=/usr/share/dci-openshift-app-agent/roles/cnf-cert/defaults/main.yml \
@@ -178,9 +178,9 @@ create_component() {
 	done
 }
 
-# Extracts image version number from the first parameter. Looks for four digits
-# first, them looks for SemVer, because it could extract 2.3.4 from 1.2.3.4.
-# Uses GNU grep with PCRE option.
+# Extracts the image version number from the first parameter. Looks for four
+# digits first, then SemVer — SemVer alone could extract 2.3.4 from 1.2.3.4.
+# Uses GNU grep with the PCRE option.
 extract_image_version() {
 	local str="$1" ver
 	ver="$(
@@ -202,8 +202,8 @@ helm_charts() {
 	local cfg
 	cfg="$(realdir "$0")/helm-charts-$CNF.yml" || die
 
-	# The function returns string as output, the following two functions produce
-	# information strings, do not add those to the output.
+	# Returns a string as output. The two helpers below emit informational
+	# strings instead — keep those off the output.
 	file_exists "$cfg" >/dev/null 2>&1 || return 0
 	isreadable "$cfg" >/dev/null 2>&1 || die
 	printf -- " \
@@ -222,7 +222,7 @@ images_versions() {
 		die Unable to read namespaces from "$CFG": "$nss".
 	nss="$(printf %s "$nss" | tr \\n \ )"
 
-	# Passes every word in the sentence, there is no need for quotes.
+	# Splits the string on whitespace; quotes are not needed.
 	for ns in $nss; do
 		log Read images from namespace "$ns". >&2
 		if [ $once = true ]; then
@@ -235,9 +235,8 @@ images_versions() {
 	printf %s "$versions" | xargs --max-args=1 | sort --unique | xargs
 }
 
-# Reads images from the namespace. Temporarily disables exit on error only for
-# the commands in the scope. The cycle 'while' with 'read' handles multiple
-# lines input.
+# Reads images from the namespace. Disables errexit only for the wrapped
+# commands. The 'while read' loop handles multi-line input.
 images_versions_ns() {
 	local \
 		err=nil:0.0.0+nil \
@@ -305,7 +304,7 @@ images_versions_ns() {
 	}
 }
 
-# Asks permission to continue if there is no a single running pod with a label
+# Asks the user whether to continue when no running pod matches a label
 # in a namespace.
 is_cnf_running() {
 	local i=0 lb lbs ns nss
@@ -313,14 +312,14 @@ is_cnf_running() {
 		die Unable to read namespaces from "$CFG": "$nss".
 	nss="$(printf %s "$nss" | tr \\n \ )"
 
-	# Passes every word in the sentence, there is no need for quotes.
+	# Splits the string on whitespace; quotes are not needed.
 	for ns in $nss; do
 		lbs="$(yq .tnf_config.[$i].targetpodlabels.[] "$CFG" 2>&1)" ||
 			die Unable to read labels of "$ns" from "$CFG": "$lbs".
 
-		# Passes every word in the sentence, there is no need for quotes. Lists all
-		# running pods with the label in the namespace. Grep fails if there is no a
-		# single one.
+		# Splits the string on whitespace; quotes are not needed. Lists all
+		# running pods with the label in the namespace. Grep fails when no pod
+		# matches.
 		for lb in $lbs; do
 			log Looking for a running pod with "$lb" in "$ns".
 			oc get pods \
@@ -359,7 +358,7 @@ node_version() {
 	printf %s:%s:%s:%s "$manufac" "$product" "$hostnme" "$puptime"
 }
 
-# Lists nodes manufactors and product names, e.g.:
+# Lists node manufacturers and product names, e.g.:
 #  Supermicro:SYS-1019P-XXXXX:hostname1:1 day 1 hour%Dell Inc.:PowerEdge R750:hostname2:2 days 2 hours
 nodes_versions() {
 	local once=true node nodes versions=none
@@ -380,16 +379,16 @@ nodes_versions() {
 		fi
 	done
 
-	# Replaces the separator between nodes. Removes commas from the string, it
-	# breaks parameters.
+	# Replaces the separator between nodes and strips commas, which would
+	# otherwise break downstream parameter parsing.
 	printf %s "$versions" |
 		sed s/,//g |
 		xargs --max-args=1 --null |
 		xargs
 }
 
-# Parse input parameters. The first parameter could be a path to settings file
-# or CNF name, which is a legacy mode. CFG and CNF are based on the parameter.
+# Parses input parameters. The first argument may be either a path to a
+# settings file or, in legacy mode, a CNF name. Sets CFG and CNF from it.
 parse_input() {
 	local str="$1"
 	if file_exists "$str"; then
@@ -407,15 +406,15 @@ parse_input() {
 	else
 		CFG="$(realdir "$0")/settings-$str.yml" || die
 		file_exists "$CFG" || die "$str: No such file. $BASE_APP_USAGE"
-		log Gento is ran in legacy mode.
+		log Gento runs in legacy mode.
 		CNF="$str"
 	fi
 	readonly CFG CNF
 }
 
-# Displays uptime in a human-readable format. The similar function prettyuptime
-# from Shellbase framework has additional dependencies and cannot be executed
-# in a node as is.
+# Displays uptime in a human-readable format. The similar prettyuptime from
+# the Shellbase framework has extra dependencies and cannot run on the node
+# as-is.
 puptime() {
 	uptime | sed -E '
 		s/^[^,]*up *//
@@ -453,8 +452,8 @@ read_info() {
 		SHELLBASE
 }
 
-# Adds environment variables for DCI if a resource file exists next to the
-# settings file. Otherwise DCI Agent will use default resource file.
+# Adds DCI environment variables when a resource file sits next to the
+# settings file. Otherwise the DCI Agent uses its default resource file.
 resource() {
 	local dir rc
 	dir="$(realdir "$CFG")" || die
@@ -508,7 +507,7 @@ validate_env() {
 		die Check HTTP proxy configuration.
 	}
 
-	# Makes sure the cluster is available. Uses the output only in case of an
+	# Makes sure the cluster is reachable. Uses the captured output only on
 	# error.
 	local out
 	out="$(oc get nodes 2>&1)" || die Unable to connect to cluster: "$out"

@@ -44,16 +44,17 @@ toc::[]
 == About
 
 Gento stands for `aGent of Red Hat OpenShift`.
-It enables Cloud-Native Applications and Operators in OpenShift using Red Hat
-Distributed CI service via {url-dci}[DCI OpenShift App Agent].
+It enables Cloud-Native Applications and Operators in OpenShift through the
+{url-dci}[DCI OpenShift App Agent], part of the Red Hat Distributed
+Continuous Integration (DCI) service.
 
 == Install
 
-The artifact is a standalone POSIX-compliant shell script named
-{url-gento}[`gento`].
+The artifact is a standalone Portable Operating System Interface (POSIX)
+shell script named {url-gento}[`gento`].
 Install it from the official releases.
-To write to `/usr/local/bin`, RHEL requires administrative privileges.
-Therefore, it is necessary to use `sudo` before executing the `tar` command.
+Writing to `/usr/local/bin` on Red Hat Enterprise Linux (RHEL) requires
+administrative privileges, so prefix the `tar` command with `sudo`.
 
 [,sh]
 ----
@@ -69,7 +70,7 @@ curl --location --silent $SRC |
 ----
 
 To install {url-gento}[`gento`] with all dependencies, run the
-POSIX-compliant shell script {url-install}[`install`] as `root`:
+{url-install}[`install`] shell script as `root`:
 
 [,sh]
 ----
@@ -111,5 +112,5 @@ You can install Sergey Matveev's {url-goredo}[`goredo`] implementation.
 
 == License
 
-`gento` is copyright {url-cv}[David Rabkin] and available under a
-{url-license}[Zero-Clause BSD license].
+Copyright {url-cv}[David Rabkin].
+Released under the {url-license}[Zero-Clause BSD license].

@@ -1,10 +1,10 @@
-# SPDX-FileCopyrightText: 2025 David Rabkin
+# SPDX-FileCopyrightText: 2025-2026 David Rabkin
 # SPDX-License-Identifier: 0BSD
 ---
 name: actionlint
 'on': [pull_request, push]
 env:
-  URL: https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash # yamllint disable-line
+  URL: https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash # yamllint disable-line
 jobs:
   actionlint:
     runs-on: ubuntu-24.04
@@ -12,5 +12,5 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - id: get
-        run: bash <(curl --silent "$URL")
+        run: bash <(curl --silent "$URL") 1.7.12
       - run: ${{ steps.get.outputs.executable }}

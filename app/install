@@ -8,7 +8,7 @@
 #
 # shellcheck disable=SC2034,SC3043 # Uses local variables, appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20260420 \
+	BASE_APP_VERSION=0.9.20260611 \
 	DST=/usr/local/bin \
 	GOR=0.9.20240303 \
 	PKG="\
@@ -28,6 +28,16 @@ readonly \
 	OC=https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.14/openshift-client-linux.tar.gz \
 	SH=https://github.com/rdavid/shellbase/archive/refs/tags/v$SHR.tar.gz \
 	YQ=https://github.com/mikefarah/yq/releases/download/v$YQR/yq_linux_amd64
+
+# Validates the environment and installs the software.
+main() {
+	validate
+	install_arc gento $GO --strip-components=2 gento-$GOR/app/gento
+	install_arc oc $OC oc
+	install_arc shellbase $SH --strip-components=2 shellbase-$SHR/lib/base.sh
+	install_dnf
+	install_yq
+}
 
 # Downloads an archive, extracts it, and installs a single file to the
 # destination.
@@ -61,16 +71,6 @@ install_yq() {
 		die Unable to install $YQ.
 	chmod +x $DST/yq || die Unable to add execute permission to $DST/yq.
 	log yq is installed or upgraded.
-}
-
-# Validates the environment and installs the software.
-main() {
-	validate
-	install_arc gento $GO --strip-components=2 gento-$GOR/app/gento
-	install_arc oc $OC oc
-	install_arc shellbase $SH --strip-components=2 shellbase-$SHR/lib/base.sh
-	install_dnf
-	install_yq
 }
 
 # Installs shellbase to the current shell session. Packages curl and tar are
@@ -120,5 +120,5 @@ validate() {
 		die Unable to create "$dir".
 }
 
-# Starting point.
+# Entry point.
 main "$@"

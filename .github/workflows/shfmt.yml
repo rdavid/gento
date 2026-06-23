@@ -8,11 +8,16 @@ name: shfmt
   pull_request:
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   shfmt:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7.0.0
+        with:
+          persist-credentials: false
       - uses: mfinelli/setup-shfmt@v4.0.1
       - run: shfmt -d ./*.do ./app/* ./cfg/*.sh

@@ -8,6 +8,9 @@ name: test
   pull_request:
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 env:
   BASE_REL: 0.9.20260404
   BASE_SRC: https://github.com/rdavid/shellbase/archive/refs/tags/v0.9.20260404.tar.gz # yamllint disable-line
@@ -23,6 +26,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7.0.0
+        with:
+          persist-credentials: false
       - run: |
           brew install \
             asciidoctor \

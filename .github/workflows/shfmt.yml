@@ -6,6 +6,7 @@ name: shfmt
   push:
     branches: [master]
   pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:

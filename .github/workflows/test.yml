@@ -17,6 +17,7 @@ env:
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         os:
           - macos-14

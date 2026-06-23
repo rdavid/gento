@@ -6,7 +6,8 @@
 # Uses the shellbase Unix shell framework:
 #  https://github.com/rdavid/shellbase/
 #
-# shellcheck disable=SC2034,SC3043 # Uses local variables, appears unused.
+# Uses local variables, appears unused:
+#  shellcheck disable=SC2034,SC3043
 readonly \
 	BASE_APP_VERSION=0.9.20260623 \
 	DST=/usr/local/bin \
@@ -80,7 +81,7 @@ shellbase() {
 	for pkg in curl tar; do
 		command -v $pkg >/dev/null 2>&1 || {
 			err=$?
-			printf >&2 Install\ %s.\\n $pkg
+			printf >&2 'Install %s.\n' $pkg
 			exit $err
 		}
 	done
@@ -94,26 +95,24 @@ shellbase() {
 			tar --extract --gzip --to-stdout shellbase-$SHR/lib/base.sh
 	)"
 	[ -n "${BASE_VERSION+x}" ] || {
-		printf >&2 No\ shellbase.\\n
+		printf >&2 'No shellbase.\n'
 		exit 1
 	}
 	log shellbase "$BASE_VERSION" is installed to the current shell session.
 }
 
-# Uses functions of shellbase to validate the environment.
+# Uses functions of shellbase to validate the environment. Verifies that
+# XDG_RUNTIME_DIR exists and is accessible to dci-openshift-app-agent.
+# File not following, A && B || C:
+#  shellcheck disable=SC1091,SC2015
 validate() {
 	local dir uid
-
-	# shellcheck disable=SC1091,SC2015 # File not following, A && B || C.
 	[ -r $DST/base.sh ] && . $DST/base.sh || shellbase
 	beroot
 	validate_cmd curl dnf install tar
 	iswritable $DST || die $DST is not writable.
 	url_exists $GO $OC $SH $YQ || die
 	user_exists $USR || die $USR: No such user.
-
-	# Verifies that XDG_RUNTIME_DIR exists and is accessible to
-	# dci-openshift-app-agent.
 	uid="$(id -u $USR 2>&1)" || die "$uid"
 	dir=/run/user/"$uid"
 	install --directory --group $USR --mode 0700 --owner $USR "$dir" ||

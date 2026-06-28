@@ -1,5 +1,5 @@
 #!/bin/sh
-# vi:et lbr noet sw=2 ts=2 tw=79 wrap
+# vi: lbr noet sw=2 ts=2 tw=79 wrap
 # SPDX-FileCopyrightText: 2023-2026 David Rabkin
 # SPDX-License-Identifier: 0BSD
 #
@@ -9,7 +9,7 @@
 # Uses local variables, appears unused:
 #  shellcheck disable=SC2034,SC3043
 readonly \
-	BASE_APP_VERSION=0.9.20260623 \
+	BASE_APP_VERSION=0.9.20260628 \
 	DST=/usr/local/bin \
 	GOR=0.9.20240303 \
 	PKG="\

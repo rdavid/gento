@@ -6,8 +6,8 @@
 # Uses the shellbase Unix shell framework:
 #  https://github.com/rdavid/shellbase
 #
-# shellcheck disable=SC2039,SC3043 # Uses local variables.
-# shellcheck disable=SC1091,SC2034 # File not following, appears unused.
+# Uses local variables, file not following, appears unused:
+#  shellcheck disable=SC2039,SC3043,SC1091,SC2034
 BASE_APP_USAGE="$(
 	cat <<-EOM 2>&1
 		  filename          TNF settings YAML file.
@@ -23,7 +23,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20260628 \
+	BASE_APP_VERSION=0.9.20260629 \
 	BASE_MIN_VERSION=0.9.20240909
 . base.sh
 
@@ -93,7 +93,8 @@ main() {
 	# Ansible inside dci-openshift-app-agent-ctl uses it for colorful output.
 	export ANSIBLE_FORCE_COLOR=True
 
-	# shellcheck disable=SC2086 # Double quotes.
+	# Double quotes:
+	#  shellcheck disable=SC2086
 	# dci-openshift-app-agent-ctl handles the parameters as array, everything is
 	# formatted right. stdout goes to regular log, stderr goes to error log.
 	{
@@ -461,7 +462,8 @@ resource() {
 	file_exists "$rc" || return 0
 	isreadable "$rc" || die
 
-	# shellcheck disable=SC1090 # File not following.
+	# File not following:
+	#  shellcheck disable=SC1090
 	. "$rc"
 	log Uses resource "$rc".
 }

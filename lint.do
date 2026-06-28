@@ -2,6 +2,8 @@
 # vi: lbr noet sw=2 ts=2 tw=79 wrap
 # SPDX-FileCopyrightText: 2023-2026 David Rabkin
 # SPDX-License-Identifier: 0BSD
+# Variable appears unused and file not following:
+#  shellcheck disable=SC2034,SC1090
 redo-ifchange \
 	./.github/*.yml \
 	./.github/workflows/*.yml \
@@ -10,9 +12,8 @@ redo-ifchange \
 	./cfg/* \
 	./README.adoc
 
-# shellcheck disable=SC2034 # Variable appears unused.
 readonly \
-	BASE_APP_VERSION=0.9.20260628 \
+	BASE_APP_VERSION=0.9.20260629 \
 	BSH=/usr/local/bin/base.sh
 [ -r "$BSH" ] || {
 	printf >&2 'Install Shellbase.\n'
@@ -20,7 +21,6 @@ readonly \
 }
 set -- "$@" --quiet
 
-# shellcheck disable=SC1090 # File not following.
 . "$BSH"
 cmd_exists actionlint && actionlint
 cmd_exists reuse && reuse lint

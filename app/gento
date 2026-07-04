@@ -23,7 +23,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20260629 \
+	BASE_APP_VERSION=0.9.20260705 \
 	BASE_MIN_VERSION=0.9.20240909
 . base.sh
 
@@ -478,7 +478,7 @@ validate_env() {
 	realpath "$CFG" >/dev/null 2>&1 || die
 	var_exists CNF || die Unable to continue with "$CFG": No CNF name.
 	resource
-	validate_cmd \
+	cmd_exists \
 		dci-openshift-agent-ctl \
 		dci-openshift-app-agent-ctl \
 		dcictl \
@@ -487,14 +487,14 @@ validate_env() {
 		sort \
 		wget \
 		which \
-		yq
-	validate_var \
+		yq || die
+	var_exists \
 		DCI_API_SECRET \
 		DCI_CLIENT_ID \
 		DCI_CS_URL \
 		DCI_TEAM_NAME \
 		KUBECONFIG \
-		XDG_RUNTIME_DIR
+		XDG_RUNTIME_DIR || die
 	file_exists "$KUBECONFIG" || die "$KUBECONFIG": No such file.
 	iswritable "$KUBECONFIG" || die "$KUBECONFIG" is not writable.
 	file_exists "$XDG_RUNTIME_DIR" || die "$XDG_RUNTIME_DIR": No such file.
@@ -502,10 +502,10 @@ validate_env() {
 
 	# Makes sure DCI server is available.
 	url_exists "$DCI_CS_URL" || {
-		validate_var \
+		var_exists \
 			http_proxy \
 			https_proxy \
-			no_proxy
+			no_proxy || die
 		die Check HTTP proxy configuration.
 	}
 

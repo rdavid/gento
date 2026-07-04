@@ -9,7 +9,7 @@
 # Uses local variables, appears unused:
 #  shellcheck disable=SC2034,SC3043
 readonly \
-	BASE_APP_VERSION=0.9.20260628 \
+	BASE_APP_VERSION=0.9.20260705 \
 	DST=/usr/local/bin \
 	GOR=0.9.20240303 \
 	PKG="\
@@ -109,7 +109,7 @@ validate() {
 	local dir uid
 	[ -r $DST/base.sh ] && . $DST/base.sh || shellbase
 	beroot
-	validate_cmd curl dnf install tar
+	cmd_exists curl dnf install tar || die
 	iswritable $DST || die $DST is not writable.
 	url_exists $GO $OC $SH $YQ || die
 	user_exists $USR || die $USR: No such user.

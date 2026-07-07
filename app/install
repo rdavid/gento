@@ -9,7 +9,7 @@
 # Uses local variables, appears unused:
 #  shellcheck disable=SC2034,SC3043
 readonly \
-	BASE_APP_VERSION=0.9.20260705 \
+	BASE_APP_VERSION=0.9.20260707 \
 	DST=/usr/local/bin \
 	GOR=0.9.20240303 \
 	PKG="\
@@ -21,7 +21,7 @@ jq \
 python3-dciclient \
 tar \
 which" \
-	SHR=0.9.20260404 \
+	SHR=0.9.20260707 \
 	USR=dci-openshift-app-agent \
 	YQR=4.53.3
 readonly \

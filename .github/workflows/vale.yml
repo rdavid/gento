@@ -13,7 +13,7 @@ permissions:
   checks: write
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 jobs:
   vale:
     runs-on: ubuntu-24.04
@@ -27,7 +27,12 @@ jobs:
           path: .github/styles
           key: vale-styles-${{ hashFiles('.vale.ini') }}
           restore-keys: vale-styles-
-      - run: sudo apt-get install --no-install-recommends asciidoctor
+      - run: |
+          sudo apt-get update
+          sudo apt-get install \
+            --assume-yes \
+            --no-install-recommends \
+            asciidoctor
       - uses: vale-cli/vale-action@2.1.2
         with:
           fail_on_error: true

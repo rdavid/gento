@@ -5,7 +5,9 @@ name: shellcheck
 'on':
   push:
     branches: [master]
+    paths: &paths ['**.do', '**.sh', .github/workflows/shellcheck.yml, app/**]
   pull_request:
+    paths: *paths
   workflow_dispatch:
 permissions:
   contents: read

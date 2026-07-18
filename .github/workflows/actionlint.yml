@@ -5,7 +5,9 @@ name: actionlint
 'on':
   push:
     branches: [master]
+    paths: &paths [.github/workflows/**]
   pull_request:
+    paths: *paths
   workflow_dispatch:
 permissions:
   contents: read

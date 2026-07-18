@@ -5,7 +5,13 @@ name: vale
 'on':
   push:
     branches: [master]
+    paths: &paths
+      - '**.adoc'
+      - .github/styles/**
+      - .github/workflows/vale.yml
+      - .vale.ini
   pull_request:
+    paths: *paths
   workflow_dispatch:
 permissions:
   contents: read

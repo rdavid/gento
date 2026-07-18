@@ -29,6 +29,7 @@
 :url-typos: https://github.com/crate-ci/typos
 :url-vale: https://vale.sh
 :url-yamllint: https://github.com/adrienverge/yamllint
+:url-zizmor: https://github.com/zizmorcore/zizmor
 
 = Gento
 
@@ -50,15 +51,15 @@ Continuous Integration (DCI) service.
 
 == Install
 
-The artifact is a standalone Portable Operating System Interface (POSIX)
+Gento ships as a standalone Portable Operating System Interface (POSIX)
 shell script named {url-gento}[`gento`].
-Install it from the official releases.
+Install it from the official {url-releases}[releases].
 Writing to `/usr/local/bin` on Red Hat Enterprise Linux (RHEL) requires
 administrative privileges, so prefix the `tar` command with `sudo`.
 
 [,sh]
 ----
-REL=0.9.20240303
+REL=0.9.20260404
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
 curl --location --silent $SRC |
   sudo tar \
@@ -69,12 +70,12 @@ curl --location --silent $SRC |
     gento-$REL/app/gento
 ----
 
-To install {url-gento}[`gento`] with all dependencies, run the
+To install {url-gento}[`gento`] with all its dependencies, run the
 {url-install}[`install`] shell script as `root`:
 
 [,sh]
 ----
-REL=0.9.20240303
+REL=0.9.20260404
 SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
 sudo su -c eval -c "$(
   curl --location --silent $SRC |
@@ -99,18 +100,20 @@ gento settings-cnf-name.yml
 
 == Test
 
-The project uses Daniel J. Bernstein's build system {url-redo}[`redo`].
+The project uses Daniel J. Bernstein's build system, {url-redo}[`redo`].
 You can install Sergey Matveev's {url-goredo}[`goredo`] implementation.
 `redo lint` applies the following linters to the source files:
 {url-actionlint}[`actionlint`],
+{url-hadolint}[`hadolint`],
 {url-reuse}[`reuse`],
 {url-shellcheck}[`shellcheck`],
 {url-shfmt}[`shfmt`],
 {url-typos}[`typos`],
 {url-vale}[`vale`],
-{url-yamllint}[`yamllint`].
+{url-yamllint}[`yamllint`],
+{url-zizmor}[`zizmor`].
 
 == License
 
-Copyright {url-cv}[David Rabkin].
-Released under the {url-license}[Zero-Clause BSD license].
+Copyright {url-cv}[David Rabkin], released under the
+{url-license}[Zero-Clause BSD license].

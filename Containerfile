@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2023-2025 David Rabkin
 # SPDX-License-Identifier: 0BSD
-FROM registry.access.redhat.com/ubi8/ubi:8.7
+FROM registry.access.redhat.com/ubi8/ubi:8.10
 LABEL maintainer=David\ Rabkin\ <david@rabkin.co.il>
 ENV \
 	USER=dci-openshift-app-agent

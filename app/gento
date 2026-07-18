@@ -12,8 +12,8 @@ BASE_APP_USAGE="$(
 	cat <<-EOM 2>&1
 		  filename          TNF settings YAML file.
 
-		The filename is a mandatory parameter. For better reporting use following
-		naming convention settings-[CNF NAME].yml, e.g.:
+		The filename is a mandatory parameter. For better reporting use the
+		following naming convention settings-[CNF NAME].yml, e.g.:
 		  gento settings-5gc.yml
 	EOM
 )" || {
@@ -23,11 +23,11 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20260705 \
+	BASE_APP_VERSION=0.9.20260719 \
 	BASE_MIN_VERSION=0.9.20240909
 . base.sh
 
-# The argument is a settings file, settings-cnf-name.yml is expected.
+# The argument is a settings file. The expected name is settings-cnf-name.yml.
 main() {
 	local charts com coms ifs image images node nodes tag tags
 	[ "$#" -ne 1 ] && die "$BASE_APP_USAGE"
@@ -54,7 +54,7 @@ main() {
 	# The function runs in a sub-process, so the caller needs its own die.
 	charts="$(helm_charts)" || die
 
-	# Reads images from deployments and composes in format:
+	# Reads images from deployments and composes them in the format:
 	#  name-a:version-a name-b:version-b name-c:version-c
 	# Splits the string on whitespace; quotes are not needed. Replaces
 	# colon with space for better readability.
@@ -65,7 +65,7 @@ main() {
 		coms="$coms,\"name:$com\""
 	done
 
-	# Reads nodes from cluster and composes in format:
+	# Reads nodes from the cluster and composes them in the format:
 	#  vendor-a:product-a:name-a:uptime-a vendor-b:product-b:name-b:uptime-b
 	nodes="$(nodes_versions)" || die
 
@@ -95,8 +95,9 @@ main() {
 
 	# Double quotes:
 	#  shellcheck disable=SC2086
-	# dci-openshift-app-agent-ctl handles the parameters as array, everything is
-	# formatted right. stdout goes to regular log, stderr goes to error log.
+	# dci-openshift-app-agent-ctl handles the parameters as an array, so
+	# everything is formatted correctly. stdout goes to the regular log and
+	# stderr goes to the error log.
 	{
 		dci-openshift-app-agent-ctl \
 			--config "$CFG" \
@@ -109,7 +110,7 @@ main() {
 		3>&1 1>&2 | tolog
 }
 
-# Extracts the version from the sidecar settings file; falls back to the
+# Extracts the version from the sidecar settings file. Falls back to the
 # default file on failure.
 cnfct_version() {
 	local \
@@ -179,8 +180,9 @@ create_component() {
 	done
 }
 
-# Extracts the image version number from the first parameter. Looks for four
-# digits first, then SemVer — SemVer alone could extract 2.3.4 from 1.2.3.4.
+# Extracts the image version number from the first parameter. Looks for a
+# four-part version first, then SemVer — SemVer alone could extract 2.3.4
+# from 1.2.3.4.
 # Uses GNU grep with the PCRE option.
 extract_image_version() {
 	local str="$1" ver
@@ -189,7 +191,7 @@ extract_image_version() {
 			grep --only-matching --perl-regexp \
 				'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)'
 	)" || {
-		logw No four digits in "$str".
+		logw No four-part version in "$str".
 		ver="$(semver "$str")" || {
 			logw No semver in "$str".
 			ver="$str"
@@ -204,7 +206,7 @@ helm_charts() {
 	cfg="$(realdir "$0")/helm-charts-$CNF.yml" || die
 
 	# Returns a string as output. The two helpers below emit informational
-	# strings instead — keep those off the output.
+	# strings, so their output is discarded.
 	file_exists "$cfg" >/dev/null 2>&1 || return 0
 	isreadable "$cfg" >/dev/null 2>&1 || die
 	printf -- " \
@@ -260,10 +262,10 @@ images_versions_ns() {
 		return 0
 	}
 
-	# Multiple images in one pod are separated by comma.
+	# Multiple images in one pod are separated by commas.
 	images="$(printf %s "$images" | tr , \\n | sort --unique)" || die "$images"
 
-	# The new line is needed in order to read the last line.
+	# The newline is needed to read the last line.
 	printf %s\\n "$images" | {
 		local \
 			image \
@@ -336,8 +338,8 @@ is_cnf_running() {
 	done
 }
 
-# Gets node hardware version by node name. xargs trims white spaces and
-# eliminates multiple white spaces.
+# Gets the node hardware version by node name. xargs trims whitespace and
+# collapses repeated spaces.
 node_version() {
 	[ -z "${1-}" ] && die Usage: node_version node-name.
 	local err=none hostnme manufac node="$1" out product puptime
@@ -395,12 +397,12 @@ parse_input() {
 	if file_exists "$str"; then
 		CFG="$(realpath "$str")" || die
 
-		# Extracts CNF name from settings file name.
-		# 1. Gets the basename without external command by stripping out longest
-		# leading match of anything followed by slash.
-		# 2. Strips all extensions by stripping out longest trailing match of dot
-		# followed by anything.
-		# 3. Removes the prefix, if exists.
+		# Extracts the CNF name from the settings file name.
+		# 1. Gets the basename without an external command by stripping the
+		# longest leading match of anything followed by a slash.
+		# 2. Strips all extensions by stripping the longest trailing match of a
+		# dot followed by anything.
+		# 3. Removes the prefix if present.
 		CNF="${CFG##*/}"
 		CNF="${CNF%%.*}"
 		CNF="${CNF#*settings-}"
@@ -415,7 +417,7 @@ parse_input() {
 
 # Displays uptime in a human-readable format. The similar prettyuptime from
 # the Shellbase framework has extra dependencies and cannot run on the node
-# as-is.
+# as is.
 puptime() {
 	uptime | sed -E '
 		s/^[^,]*up *//
@@ -468,13 +470,14 @@ resource() {
 	log Uses resource "$rc".
 }
 
-# Checks various aspects of an environment.
+# Checks various aspects of the environment.
 validate_env() {
 	beuser dci-openshift-app-agent
 	parse_input "$@"
 	isreadable "$CFG" || die "$CFG" is not readable.
 
-	# DCI works with absolute paths, makes sure parent directories are readable.
+	# DCI works with absolute paths. Makes sure the parent directories are
+	# readable.
 	realpath "$CFG" >/dev/null 2>&1 || die
 	var_exists CNF || die Unable to continue with "$CFG": No CNF name.
 	resource
@@ -500,7 +503,7 @@ validate_env() {
 	file_exists "$XDG_RUNTIME_DIR" || die "$XDG_RUNTIME_DIR": No such file.
 	iswritable "$XDG_RUNTIME_DIR" || die "$XDG_RUNTIME_DIR" is not writable.
 
-	# Makes sure DCI server is available.
+	# Makes sure the DCI server is available.
 	url_exists "$DCI_CS_URL" || {
 		var_exists \
 			http_proxy \

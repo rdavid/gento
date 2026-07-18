@@ -13,7 +13,7 @@ redo-ifchange \
 	./README.adoc
 
 readonly \
-	BASE_APP_VERSION=0.9.20260629 \
+	BASE_APP_VERSION=0.9.20260719 \
 	BSH=/usr/local/bin/base.sh
 [ -r "$BSH" ] || {
 	printf >&2 'Install Shellbase.\n'
@@ -37,5 +37,5 @@ cmd_exists yamllint &&
 		./.github/workflows/*.yml \
 		./cfg/*.yml
 
-# Gracefully handle missing last tool without failing the script.
+# Gracefully handles a missing last tool without failing the script.
 :

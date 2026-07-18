@@ -9,7 +9,7 @@
 # Uses local variables, appears unused:
 #  shellcheck disable=SC2034,SC3043
 readonly \
-	BASE_APP_VERSION=0.9.20260707 \
+	BASE_APP_VERSION=0.9.20260719 \
 	DST=/usr/local/bin \
 	GOR=0.9.20240303 \
 	PKG="\
@@ -55,8 +55,8 @@ install_arc() {
 }
 
 # Installs or updates required RHEL packages. dnf returns success even when
-# only one of the listed packages succeeds, so upgrade them one by one to
-# surface every failure.
+# only one of the listed packages succeeds, so the loop upgrades them one by
+# one to surface every failure.
 install_dnf() {
 	local out pkg
 	for pkg in $PKG; do
@@ -101,7 +101,7 @@ shellbase() {
 	log shellbase "$BASE_VERSION" is installed to the current shell session.
 }
 
-# Uses functions of shellbase to validate the environment. Verifies that
+# Uses shellbase functions to validate the environment. Verifies that
 # XDG_RUNTIME_DIR exists and is accessible to dci-openshift-app-agent.
 # File not following, A && B || C:
 #  shellcheck disable=SC1091,SC2015

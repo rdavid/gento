@@ -1,0 +1,25 @@
+<!--
+SPDX-FileCopyrightText: 2026 David Rabkin
+SPDX-License-Identifier: 0BSD
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <line x1="12" y1="12" x2="19.5" y2="12" stroke="#2b2b2b" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="12" y1="12" x2="15.75" y2="18.5" stroke="#2b2b2b" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="12" y1="12" x2="8.25" y2="18.5" stroke="#2b2b2b" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="12" y1="12" x2="4.5" y2="12" stroke="#2b2b2b" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="12" y1="12" x2="8.25" y2="5.5" stroke="#2b2b2b" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="12" y1="12" x2="15.75" y2="5.5" stroke="#2b2b2b" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="12" y1="12" x2="19.5" y2="12" stroke="#f0dfaf" stroke-width="1.1" stroke-linecap="round"/>
+  <line x1="12" y1="12" x2="15.75" y2="18.5" stroke="#f0dfaf" stroke-width="1.1" stroke-linecap="round"/>
+  <line x1="12" y1="12" x2="8.25" y2="18.5" stroke="#f0dfaf" stroke-width="1.1" stroke-linecap="round"/>
+  <line x1="12" y1="12" x2="4.5" y2="12" stroke="#f0dfaf" stroke-width="1.1" stroke-linecap="round"/>
+  <line x1="12" y1="12" x2="8.25" y2="5.5" stroke="#f0dfaf" stroke-width="1.1" stroke-linecap="round"/>
+  <line x1="12" y1="12" x2="15.75" y2="5.5" stroke="#f0dfaf" stroke-width="1.1" stroke-linecap="round"/>
+  <circle cx="19.5" cy="12" r="1.9" fill="#f0dfaf" stroke="#2b2b2b" stroke-width="1.2"/>
+  <circle cx="15.75" cy="18.5" r="1.9" fill="#f0dfaf" stroke="#2b2b2b" stroke-width="1.2"/>
+  <circle cx="8.25" cy="18.5" r="1.9" fill="#f0dfaf" stroke="#2b2b2b" stroke-width="1.2"/>
+  <circle cx="4.5" cy="12" r="1.9" fill="#f0dfaf" stroke="#2b2b2b" stroke-width="1.2"/>
+  <circle cx="8.25" cy="5.5" r="1.9" fill="#f0dfaf" stroke="#2b2b2b" stroke-width="1.2"/>
+  <circle cx="15.75" cy="5.5" r="1.9" fill="#f0dfaf" stroke="#2b2b2b" stroke-width="1.2"/>
+  <circle cx="12" cy="12" r="2.1" fill="#2b2b2b" stroke="#f0dfaf" stroke-width="1.4"/>
+</svg>

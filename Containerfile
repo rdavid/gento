@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023-2025 David Rabkin
+# SPDX-FileCopyrightText: 2023-2026 David Rabkin
 # SPDX-License-Identifier: 0BSD
 FROM registry.access.redhat.com/ubi8/ubi:8.10
 LABEL maintainer=David\ Rabkin\ <david@rabkin.co.il>
@@ -20,6 +20,7 @@ RUN \
 		bash-4.4.20 \
 		findutils-4.6.0 \
 	&& dnf clean all --disableplugin=subscription-manager
+# hadolint ignore=DL3066
 USER "$USER"
 WORKDIR /home/"$USER"
 COPY \

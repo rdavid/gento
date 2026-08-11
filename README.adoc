@@ -105,9 +105,9 @@ sudo su -c eval -c "$(
 ----
 
 Run {url-gento}[`gento`] as the `dci-openshift-app-agent` user.
-The parameter is a DCI settings file.
+Pass a DCI settings file as the parameter.
 For better reporting, use the naming pattern `settings-cnf-name.yml`.
-Make sure `/usr/local/bin` is in the `dci-openshift-app-agent` user's `PATH`.
+Add `/usr/local/bin` to the `dci-openshift-app-agent` user's `PATH`.
 
 [,sh]
 ----

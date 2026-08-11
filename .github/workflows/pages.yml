@@ -5,7 +5,9 @@ name: pages
 'on':
   push:
     branches: [master]
-    paths: [README.adoc, .github/pages/**]
+    paths: &paths [README.adoc, .github/pages/**]
+  pull_request:
+    paths: *paths
   workflow_dispatch:
 permissions:
   contents: read
@@ -25,7 +27,10 @@ jobs:
           persist-credentials: false
       - run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends --yes asciidoctor
+          sudo apt-get install \
+            --assume-yes \
+            --no-install-recommends \
+            asciidoctor
       - run: |
           mkdir _site
           cp .github/pages/favicon.svg _site/favicon.svg
@@ -41,6 +46,7 @@ jobs:
           path: _site
   deploy:
     needs: build
+    if: github.event_name == 'push'
     permissions:
       pages: write
       id-token: write

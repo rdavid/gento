@@ -39,6 +39,7 @@ jobs:
             --assume-yes \
             --no-install-recommends \
             asciidoctor
-      - uses: vale-cli/vale-action@2.1.2
+      - uses: vale-cli/vale-action@v3.0.0
         with:
+          reporter: github-check
           fail_on_error: true

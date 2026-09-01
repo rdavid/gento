@@ -8,28 +8,28 @@
 :img-rh: https://img.shields.io/badge/red%20hat---?color=dca3a3&logo=redhat&logoColor=dcdccc&style=flat
 :img-releases: https://img.shields.io/github/v/release/rdavid/gento?color=dfaf8f&label=%20&labelColor=555555&logo=semver&logoColor=dcdccc&style=flat
 :img-test: https://img.shields.io/github/actions/workflow/status/rdavid/gento/test.yml?branch=master&color=f0dfaf&label=test&labelColor=555555&logo=apple&logoColor=dcdccc&style=flat
-:url-actionlint: https://github.com/rhysd/actionlint
+:url-actionlint: https://rhysd.github.io/actionlint/
 :url-cv: http://cv.rabkin.co.il
 :url-dci: https://github.com/redhat-cip/dci-openshift-app-agent
 :url-gento: https://github.com/rdavid/gento/blob/master/app/gento
 :url-goredo: http://www.goredo.stargrave.org/INSTALL.html
-:url-hadolint: https://github.com/hadolint/hadolint
+:url-hadolint: https://hadolint.com/
 :url-hoc: https://hitsofcode.com/view/github/rdavid/gento?branch=master
 :url-install: https://github.com/rdavid/gento/blob/master/app/install
 :url-license: https://github.com/rdavid/gento/blob/master/LICENSES/0BSD.txt
 :url-ocp: https://www.redhat.com/en/technologies/cloud-computing/openshift
 :url-redo: http://cr.yp.to/redo.html
 :url-releases: https://github.com/rdavid/gento/releases
-:url-reuse: https://github.com/fsfe/reuse-action
+:url-reuse: https://reuse.software/
 :url-rh: https://www.redhat.com
 :url-shellbase: https://github.com/rdavid/shellbase
-:url-shellcheck: https://github.com/koalaman/shellcheck
+:url-shellcheck: https://www.shellcheck.net/
 :url-shfmt: https://github.com/mvdan/sh
 :url-test: https://github.com/rdavid/gento/actions/workflows/test.yml
 :url-typos: https://github.com/crate-ci/typos
 :url-vale: https://vale.sh
-:url-yamllint: https://github.com/adrienverge/yamllint
-:url-zizmor: https://github.com/zizmorcore/zizmor
+:url-yamllint: https://yamllint.readthedocs.io/
+:url-zizmor: https://docs.zizmor.sh/
 
 = Gento
 

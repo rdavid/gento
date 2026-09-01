@@ -62,7 +62,7 @@ endif::[]
 == About
 
 Gento stands for `aGent of Red Hat OpenShift`.
-It enables Cloud-Native Applications and Operators in OpenShift through the
+It enables Cloud-Native Applications and Operators on OpenShift through the
 {url-dci}[DCI OpenShift App Agent], part of the Red Hat Distributed
 Continuous Integration (DCI) service.
 
@@ -105,7 +105,7 @@ sudo su -c eval -c "$(
 ----
 
 Run {url-gento}[`gento`] as the `dci-openshift-app-agent` user.
-Pass a DCI settings file as the parameter.
+Pass a DCI settings file as its parameter.
 For better reporting, use the naming pattern `settings-cnf-name.yml`.
 Add `/usr/local/bin` to the `dci-openshift-app-agent` user's `PATH`.
 

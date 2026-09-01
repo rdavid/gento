@@ -22,7 +22,7 @@
 :url-releases: https://github.com/rdavid/gento/releases
 :url-reuse: https://reuse.software/
 :url-rh: https://www.redhat.com
-:url-shellbase: https://github.com/rdavid/shellbase
+:url-shellbase: https://rdavid.github.io/shellbase/
 :url-shellcheck: https://www.shellcheck.net/
 :url-shfmt: https://github.com/mvdan/sh
 :url-test: https://github.com/rdavid/gento/actions/workflows/test.yml
@@ -65,6 +65,7 @@ Gento stands for `aGent of Red Hat OpenShift`.
 It enables Cloud-Native Applications and Operators on OpenShift through the
 {url-dci}[DCI OpenShift App Agent], part of the Red Hat Distributed
 Continuous Integration (DCI) service.
+Gento is built on the {url-shellbase}[`shellbase`] Unix shell framework.
 
 == Install
 

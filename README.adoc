@@ -3,11 +3,11 @@
 :!toc-title:
 // URLs:
 :img-hoc: https://hitsofcode.com/github/rdavid/gento?branch=master&label=hits%20of%20code
-:img-license: https://img.shields.io/github/license/rdavid/gento?color=94bff3&labelColor=555555&logo=freebsd&logoColor=dcdccc&style=flat
-:img-ocp: https://img.shields.io/badge/openshift---?color=8cd0d3&logo=redhatopenshift&logoColor=dcdccc&style=flat
-:img-rh: https://img.shields.io/badge/red%20hat---?color=dca3a3&logo=redhat&logoColor=dcdccc&style=flat
+:img-license: https://img.shields.io/github/license/rdavid/gento?color=94bff3&labelColor=555555&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI%2BPHRleHQgeD0iMTIiIHk9IjIwIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNkY2RjY2MiPiYjMTY5OzwvdGV4dD48L3N2Zz4%3D&style=flat
+:img-ocp: https://img.shields.io/badge/openshift---?color=8cd0d3&labelColor=555555&logo=redhatopenshift&logoColor=dcdccc&style=flat
+:img-rh: https://img.shields.io/badge/red%20hat---?color=f0dfaf&labelColor=555555&logo=redhat&logoColor=dcdccc&style=flat
 :img-releases: https://img.shields.io/github/v/release/rdavid/gento?color=dfaf8f&label=%20&labelColor=555555&logo=semver&logoColor=dcdccc&style=flat
-:img-test: https://img.shields.io/github/actions/workflow/status/rdavid/gento/test.yml?branch=master&color=f0dfaf&label=test&labelColor=555555&logo=apple&logoColor=dcdccc&style=flat
+:img-test: https://img.shields.io/github/actions/workflow/status/rdavid/gento/test.yml?branch=master&color=7f9f7f&label=test&labelColor=555555&logo=github&logoColor=dcdccc&style=flat
 :url-actionlint: https://rhysd.github.io/actionlint/
 :url-cv: http://cv.rabkin.co.il
 :url-dci: https://github.com/redhat-cip/dci-openshift-app-agent
@@ -37,10 +37,10 @@
 ++++
 <div align="right">
 <a href="{url-test}"><img src="{img-test}" alt="test"></a>
-<a href="{url-hoc}"><img src="{img-hoc}" alt="hits of code"></a>
 <a href="{url-releases}"><img src="{img-releases}" alt="release"></a>
 <a href="{url-rh}"><img src="{img-rh}" alt="red hat"></a>
 <a href="{url-ocp}"><img src="{img-ocp}" alt="openshift"></a>
+<a href="{url-hoc}"><img src="{img-hoc}" alt="hits of code"></a>
 <a href="{url-license}"><img src="{img-license}" alt="license"></a>
 </div>
 ++++

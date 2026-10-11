@@ -18,6 +18,7 @@
 :url-install: https://github.com/rdavid/gento/blob/master/app/install
 :url-license: https://github.com/rdavid/gento/blob/master/LICENSES/0BSD.txt
 :url-ocp: https://www.redhat.com/en/technologies/cloud-computing/openshift
+:url-pages: https://rdavid.github.io/gento/
 :url-redo: http://cr.yp.to/redo.html
 :url-releases: https://github.com/rdavid/gento/releases
 :url-reuse: https://reuse.software/
@@ -66,6 +67,9 @@ It enables Cloud-Native Applications and Operators on OpenShift through the
 {url-dci}[DCI OpenShift App Agent], part of the Red Hat Distributed
 Continuous Integration (DCI) service.
 Gento is built on the {url-shellbase}[`shellbase`] Unix shell framework.
+ifndef::pages-build[]
+Gento also has a {url-pages}[website].
+endif::[]
 
 == Install
 

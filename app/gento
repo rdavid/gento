@@ -23,7 +23,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20260719 \
+	BASE_APP_VERSION=0.9.20261011 \
 	BASE_MIN_VERSION=0.9.20240909
 . base.sh
 
@@ -56,7 +56,7 @@ main() {
 
 	# Reads images from deployments and composes them in the format:
 	#  name-a:version-a name-b:version-b name-c:version-c
-	# Splits the string on whitespace; quotes are not needed. Replaces
+	# Splits the string on whitespace. Quotes are not needed. Replaces
 	# colon with space for better readability.
 	images="$(images_versions)" || die
 	for image in $images; do
@@ -181,7 +181,7 @@ create_component() {
 }
 
 # Extracts the image version number from the first parameter. Looks for a
-# four-part version first, then SemVer — SemVer alone could extract 2.3.4
+# four-part version first, then SemVer. SemVer alone could extract 2.3.4
 # from 1.2.3.4.
 # Uses GNU grep with the PCRE option.
 extract_image_version() {
@@ -225,7 +225,7 @@ images_versions() {
 		die Unable to read namespaces from "$CFG": "$nss".
 	nss="$(printf %s "$nss" | tr \\n \ )"
 
-	# Splits the string on whitespace; quotes are not needed.
+	# Splits the string on whitespace. Quotes are not needed.
 	for ns in $nss; do
 		log Read images from namespace "$ns". >&2
 		if [ $once = true ]; then
@@ -315,12 +315,12 @@ is_cnf_running() {
 		die Unable to read namespaces from "$CFG": "$nss".
 	nss="$(printf %s "$nss" | tr \\n \ )"
 
-	# Splits the string on whitespace; quotes are not needed.
+	# Splits the string on whitespace. Quotes are not needed.
 	for ns in $nss; do
 		lbs="$(yq .tnf_config.[$i].targetpodlabels.[] "$CFG" 2>&1)" ||
 			die Unable to read labels of "$ns" from "$CFG": "$lbs".
 
-		# Splits the string on whitespace; quotes are not needed. Lists all
+		# Splits the string on whitespace. Quotes are not needed. Lists all
 		# running pods with the label in the namespace. Grep fails when no pod
 		# matches.
 		for lb in $lbs; do

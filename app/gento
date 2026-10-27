@@ -6,7 +6,8 @@
 # Uses the shellbase Unix shell framework:
 #  https://github.com/rdavid/shellbase
 #
-# Uses local variables, file not following, appears unused:
+# Local variables are used, sourced files are not followed, and some
+# variables appear unused:
 #  shellcheck disable=SC2039,SC3043,SC1091,SC2034
 BASE_APP_USAGE="$(
 	cat <<-EOM 2>&1
@@ -23,7 +24,7 @@ BASE_APP_USAGE="$(
 }
 readonly \
 	BASE_APP_USAGE \
-	BASE_APP_VERSION=0.9.20261011 \
+	BASE_APP_VERSION=0.9.20261028 \
 	BASE_MIN_VERSION=0.9.20240909
 . base.sh
 
@@ -470,7 +471,8 @@ resource() {
 	log Uses resource "$rc".
 }
 
-# Checks various aspects of the environment.
+# Validates the user, the settings file, the required tools, the variables,
+# and the connectivity.
 validate_env() {
 	beuser dci-openshift-app-agent
 	parse_input "$@"
@@ -519,5 +521,5 @@ validate_env() {
 	is_cnf_running
 }
 
-# Entry point.
+# Runs the script.
 main "$@"

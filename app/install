@@ -6,10 +6,10 @@
 # Uses the shellbase Unix shell framework:
 #  https://github.com/rdavid/shellbase/
 #
-# Uses local variables, appears unused:
+# Local variables are used and some variables appear unused:
 #  shellcheck disable=SC2034,SC3043
 readonly \
-	BASE_APP_VERSION=0.9.20261011 \
+	BASE_APP_VERSION=0.9.20261028 \
 	DST=/usr/local/bin \
 	GOR=0.9.20260404 \
 	PKG="\
@@ -103,7 +103,7 @@ shellbase() {
 
 # Uses shellbase functions to validate the environment. Verifies that
 # XDG_RUNTIME_DIR exists and is accessible to dci-openshift-app-agent.
-# File not following, A && B || C:
+# Sourced files are not followed and the A && B || C pattern is used:
 #  shellcheck disable=SC1091,SC2015
 validate() {
 	local dir uid
@@ -119,5 +119,5 @@ validate() {
 		die Unable to create "$dir".
 }
 
-# Entry point.
+# Runs the script.
 main "$@"

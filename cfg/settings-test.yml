@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2023-2026 David Rabkin
 # SPDX-License-Identifier: 0BSD
 #
-# Test dci-openshift-app-agent settings.
+# Provides test settings for dci-openshift-app-agent.
 ---
 dci_topic: OCP-4.14
 dci_name: Test

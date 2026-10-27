@@ -31,26 +31,12 @@ jobs:
       - run: |
           brew install \
             asciidoctor \
-            goredo \
+            rdavid/tap/goredo \
+            rdavid/tap/shellbase \
             reuse \
             shellcheck \
             shfmt \
             typos-cli \
             vale \
             yamllint
-          rel=0.9.20261010
-          src=https://github.com/rdavid/shellbase/archive/refs/tags
-          curl \
-            --fail \
-            --location \
-            --retry 3 \
-            --show-error \
-            --silent \
-            "$src"/v"$rel".tar.gz |
-            tar \
-              --directory /usr/local/bin \
-              --extract \
-              --gzip \
-              --strip-components=2 \
-              shellbase-"$rel"/lib/base.sh
           redo -xx

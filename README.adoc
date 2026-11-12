@@ -19,7 +19,7 @@
 :url-license: https://github.com/rdavid/gento/blob/master/LICENSES/0BSD.txt
 :url-ocp: https://www.redhat.com/en/technologies/cloud-computing/openshift
 :url-pages: https://rdavid.github.io/gento/
-:url-redo: http://cr.yp.to/redo.html
+:url-redo: https://cr.yp.to/redo.html
 :url-releases: https://github.com/rdavid/gento/releases
 :url-reuse: https://reuse.software/
 :url-rh: https://www.redhat.com
@@ -63,9 +63,10 @@ endif::[]
 == About
 
 Gento stands for `aGent of Red Hat OpenShift`.
-It enables Cloud-Native Applications and Operators on OpenShift through the
-{url-dci}[DCI OpenShift App Agent], part of the Red Hat Distributed
-Continuous Integration (DCI) service.
+It deploys and certifies cloud-native applications and operators on
+OpenShift through the {url-dci}[DCI OpenShift App Agent].
+The agent is part of the Red Hat Distributed Continuous Integration (DCI)
+service.
 Gento is built on the {url-shellbase}[`shellbase`] Unix shell framework.
 ifndef::pages-build[]
 Gento also has a {url-pages}[website].
@@ -75,25 +76,15 @@ endif::[]
 
 Gento ships as a standalone Portable Operating System Interface (POSIX)
 shell script named {url-gento}[`gento`].
-Install it from the official {url-releases}[releases].
-Writing to `/usr/local/bin` on Red Hat Enterprise Linux (RHEL) requires
-administrative privileges, so prefix the `tar` command with `sudo`.
+Download it from the official {url-releases}[releases].
 
-[,sh]
-----
-REL=0.9.20260404
-SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
-curl --location --silent $SRC |
-  sudo tar \
-    --directory /usr/local/bin \
-    --extract \
-    --gzip \
-    --strip-components=2 \
-    gento-$REL/app/gento
-----
-
-To install {url-gento}[`gento`] with all its dependencies, run the
-{url-install}[`install`] shell script as `root`:
+The {url-install}[`install`] script prepares a Red Hat Enterprise Linux
+(RHEL) host in one step.
+It installs `gento`, `shellbase`, `oc`, `yq`, and the DCI packages to
+`/usr/local/bin`.
+It also creates the runtime directory of the `dci-openshift-app-agent`
+user.
+Run it as `root`:
 
 [,sh]
 ----
@@ -109,10 +100,27 @@ sudo su -c eval -c "$(
 )"
 ----
 
-Run {url-gento}[`gento`] as the `dci-openshift-app-agent` user.
-Pass a DCI settings file as its parameter.
-For better reporting, use the naming pattern `settings-cnf-name.yml`.
-Add `/usr/local/bin` to the `dci-openshift-app-agent` user's `PATH`.
+To install just the `gento` script, extract it to `/usr/local/bin`.
+Writing there requires administrative privileges, so prefix `tar` with
+`sudo`:
+
+[,sh]
+----
+REL=0.9.20260404
+SRC=https://github.com/rdavid/gento/archive/refs/tags/v$REL.tar.gz
+curl --location --silent $SRC |
+  sudo tar \
+    --directory /usr/local/bin \
+    --extract \
+    --gzip \
+    --strip-components=2 \
+    gento-$REL/app/gento
+----
+
+Run `gento` as the `dci-openshift-app-agent` user with `/usr/local/bin` in
+its `PATH`.
+Pass a DCI settings file as the only parameter.
+Name the file `settings-cnf-name.yml` for clearer reports.
 
 [,sh]
 ----
@@ -124,7 +132,8 @@ gento settings-cnf-name.yml
 
 The project uses Daniel J. Bernstein's build system, {url-redo}[`redo`].
 Sergey Matveev's {url-goredo}[`goredo`] implementation works as well.
-`redo lint` applies the following linters to the source files:
+Run `redo` to lint the project.
+It applies the following linters to the source files:
 {url-actionlint}[`actionlint`],
 {url-hadolint}[`hadolint`],
 {url-reuse}[`reuse`],

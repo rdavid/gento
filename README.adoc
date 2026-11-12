@@ -13,7 +13,7 @@
 :url-dci: https://github.com/redhat-cip/dci-openshift-app-agent
 :url-gento: https://github.com/rdavid/gento/blob/master/app/gento
 :url-goredo: http://www.goredo.stargrave.org/INSTALL.html
-:url-hadolint: https://hadolint.com/
+:url-hadolint: https://hadolint.github.io/hadolint/
 :url-hoc: https://hitsofcode.com/view/github/rdavid/gento?branch=master
 :url-install: https://github.com/rdavid/gento/blob/master/app/install
 :url-license: https://github.com/rdavid/gento/blob/master/LICENSES/0BSD.txt
